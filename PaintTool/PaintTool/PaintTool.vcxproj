@@ -150,6 +150,7 @@
     <ClInclude Include="stamp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="canvas.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shape.cpp" />

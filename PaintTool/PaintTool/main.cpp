@@ -33,8 +33,18 @@
 //Global variables
 HINSTANCE g_hInstance;
 CCanvas* g_pCanvas;
+
 IShape* g_pShape = 0;
+
 HMENU g_hMenu;
+int iPosX, iPosY;		// Mouse Position
+COLORREF g_PenColor = RGB(0, 0, 0);		// Global Colour
+int g_PenWidth = 1;			// Global Width
+int g_PenStyle = PS_SOLID;
+CHOOSECOLOR ColorPicker;
+COLORREF customColors[16];
+
+//bool Drawing = 0;
 
 
 //Enum to decalre the type of tool supported by the application.
@@ -74,16 +84,30 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,
 	case WM_CREATE:
 	{
 		//initialization.
+		g_pCanvas = new CCanvas();
+		g_pCanvas->Initialise(_hwnd, 1500, 800);
 
-
+		ColorPicker.lStructSize = sizeof(ColorPicker);
+		ColorPicker.hwndOwner = _hwnd;
+		ColorPicker.rgbResult = RGB(0, 0, 0);
+		ColorPicker.lpCustColors = customColors;
+		ColorPicker.Flags = CC_ANYCOLOR | CC_FULLOPEN;
 		// Return Success.
+		return (0);
+	}
+	break;
+	case WM_RBUTTONDOWN:									
+	{
+
+		g_pShape = nullptr;
 		return (0);
 	}
 	break;
 	case WM_LBUTTONDOWN:									// when the left button is pressed
 	{
-		int iPosX = static_cast<int>(LOWORD(_lparam));		// find the pointer location
-		int iPosY = static_cast<int>(HIWORD(_lparam));
+	
+		iPosX = static_cast<int>(LOWORD(_lparam));			// find the pointer location
+		iPosY = static_cast<int>(HIWORD(_lparam));
 
 
 			switch (CurrentTool)							// find the current shape
@@ -92,112 +116,62 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,
 			{
 				return(0);									// If there is no shape, do nothing
 			}
+			break;
 			case LINESHAPE:									
 			{
-				CLine Line; 				//If there is, Create an instance of it
-				Line.SetStartX(iPosX);				//and set it's start to where the click occured
-				Line.SetStartX(iPosY);
+				g_pShape = new CLine(g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY);
+				g_pCanvas->AddShape(g_pShape);
+				
+				//If there is, Create an instance of it
+
 			}
 			break;
 			default: break;
 			}
+			InvalidateRect(_hwnd, NULL, TRUE);
+
+			return (0);
 	}
 	break;
 	case WM_MOUSEMOVE:
 	{
-		int iPosX = static_cast<int>(LOWORD(_lparam));
-		int iPosY = static_cast<int>(HIWORD(_lparam));
+		iPosX = static_cast<int>(LOWORD(_lparam));
+		iPosY = static_cast<int>(HIWORD(_lparam));
 		
-		// get the button state
-		int iButtons = static_cast<int>(_wparam);
+		
 		// Test if left button is down...
-		if (iButtons & MK_LBUTTON)
+		if (MK_LBUTTON)
 		{
-			switch (CurrentTool)
+			if (g_pShape != nullptr/* && Drawing*/)
 			{
-			case LINESHAPE:
-			{
-				Line.SetStartX(5);
-
-				/*
-				HDC hdc = GetDC(_hwnd);
-
-				if (NULL == hdc)
-				{
-				//ERROR
-				return(0);
-				}
-
-				//Use the hdc here, and do some graphics...
-
-				HPEN hLinePen;
-				hLinePen = CreatePen(PS_SOLID, 7, RGB(255, 0, 0));
-				HPEN hPenOld = (HPEN)SelectObject(hdc, hLinePen);
-
-				MoveToEx(hdc, iPosX, iPosY, NULL);
-				LineTo(hdc, 500, 250);
-
-				SelectObject(hdc, hPenOld);
-				DeleteObject(hLinePen);
-
-				ReleaseDC(_hwnd, hdc);
-
-				// Get client rectangle of window – use Win32 call.
-				GetClientRect(_hwnd, &rect);
-				// Validate window.
-				ValidateRect(_hwnd, &rect); // IGNORE ALL WMPAINT MESSAGES
-				*/
-			}
-			break;
-			default: break;
-			}
-
-			// Do something...
-
+				g_pShape->SetEndX(iPosX);
+				g_pShape->SetEndY(iPosY);
+				InvalidateRect(_hwnd, NULL, TRUE);
+			}						
 		}
-
-		
-		
+			return (0);
 	}
 	break;
+	case WM_LBUTTONUP:
+	{
+	//	Drawing = 0;
+		g_pShape = nullptr;
+	}
+	break;
+	/*case WM_LBUTTONDBLCLK:
+	{
+		Drawing = 0;
+	}
+break;*/
 	case WM_PAINT:
 	{
 		hdc = BeginPaint(_hwnd, &ps);
 		
 		//Painting Code goes here:
 	
+		if (g_pCanvas != nullptr)
+			g_pCanvas->Draw();
 
-
-		/*if (CurrentTool = LINESHAPE) {
-
-			HPEN hLinePen;
-			hLinePen = CreatePen(PS_SOLID, 7, RGB(255, 0, 0));
-			HPEN hPenOld = (HPEN)SelectObject(hdc, hLinePen);
-
-			MoveToEx(hdc, 100, 100, NULL);
-			LineTo(hdc, 500, 250);
-
-			SelectObject(hdc, hPenOld);
-			DeleteObject(hLinePen);
-			
-		}
-		
-		/*Draw a blue ellipse
-		if (bDrawEllipse) {
-			HPEN hEllipsePen;
-			COLORREF qEllipseColor;
-			qEllipseColor = RGB(0, 0, 255);
-			hEllipsePen = CreatePen(PS_SOLID, 3, qEllipseColor);
-			hPenOld = (HPEN)SelectObject(hdc, hEllipsePen);
-
-			Arc(hdc, 100, 100, 500, 250, 0, 0, 0, 0);
-
-			SelectObject(hdc, hPenOld);
-			DeleteObject(hEllipsePen);
-		}
-		*/
-
-		
 		EndPaint(_hwnd, &ps);
 		// Return Success.
 		return (0);
@@ -233,6 +207,40 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,
 			CurrentTool = FREEHAND;
 			break;
 		}
+		//PenWidth
+		case ID_PEN_WIDTH_1:
+		{
+			g_PenWidth = 1;
+			break;
+		}
+		case ID_PEN_WIDTH_2:
+		{
+			g_PenWidth = 2;
+			break;
+		}
+		case ID_PEN_WIDTH_3:
+		{
+			g_PenWidth = 3;
+			break;
+		}
+		case ID_PEN_WIDTH_4:
+		{
+			g_PenWidth = 4;
+			break;
+		}
+		case ID_PEN_WIDTH_5:
+		{
+			g_PenWidth = 5;
+			break;
+		}
+		case ID_PEN_COLOR:
+		{
+			
+			if(ChooseColor(&ColorPicker)){
+			g_PenColor = ColorPicker.rgbResult;
+			}
+		break;
+		}
 		default:
 			break;
 		}
@@ -241,6 +249,8 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,
 	break;
 	case WM_DESTROY:
 	{
+		delete g_pCanvas;
+
 		// Kill the application, this sends a WM_QUIT message.
 		PostQuitMessage(0);
 

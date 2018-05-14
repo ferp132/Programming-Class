@@ -40,7 +40,7 @@ public:
 	~CCanvas();
 	bool Initialise(HWND _hwnd, int _iWidth, int _iHeight);
 	CBackBuffer* GetBackBuffer();
-	bool Draw(HDC _hdc);
+	bool Draw();
 	void Save(HWND _hwnd);
 	void AddShape(IShape*);
 	void AddStamp(CStamp*);
@@ -49,6 +49,7 @@ private:
 	CBackBuffer* m_pBackBuffer; // A canvas has a backbuffer.
 	std::vector<CStamp*> m_vecStamps;
 	std::vector<IShape*> m_shapes;
+	HWND hwnd;
 };
 
 #endif
