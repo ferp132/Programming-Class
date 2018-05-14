@@ -14,6 +14,12 @@
 
 //#define WIN32_LEAN_AND_MEAN
 
+
+//TODO: Create Draw Functions FOr Ellipse and Rectangle
+//		Create MENUCHECKER FUNCTION
+//		CREATE POLYGON TOOL
+
+
 #include <windows.h>   // Include all the windows headers.
 #include <windowsx.h>  // Include useful macros.
 
@@ -35,16 +41,26 @@ HINSTANCE g_hInstance;
 CCanvas* g_pCanvas;
 
 IShape* g_pShape = 0;
-
 HMENU g_hMenu;
-int iPosX, iPosY;		// Mouse Position
-COLORREF g_PenColor = RGB(0, 0, 0);		// Global Colour
-int g_PenWidth = 1;			// Global Width
-int g_PenStyle = PS_SOLID;
-CHOOSECOLOR ColorPicker;
-COLORREF customColors[16];
 
-//bool Drawing = 0;
+int iPosX, iPosY;							// Mouse Position
+
+COLORREF g_PenColor = RGB(0, 0, 0);			// Pen Colour
+COLORREF g_BrushColor = RGB(0, 0, 0);		// Brush Colour
+
+int g_PenWidth = 1;							// Line Width
+
+int g_PenStyle = PS_SOLID;					// Pen Style
+int g_BrushStyle = PS_NULL;					// Brush Style
+
+CHOOSECOLOR ColorPicker;					// For Colour Picker Dialog
+COLORREF customColors[16];					// ""
+
+
+void MenuChecker(HMENU &Menu, UINT MenuItem) 
+{
+
+}
 
 
 //Enum to decalre the type of tool supported by the application.
@@ -76,22 +92,25 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,
 	// This is the main message handler of the system.
 	PAINTSTRUCT ps; // Used in WM_PAINT.
 	HDC hdc;        // Handle to a device context.
-	
+
 	RECT rect;
 
 	switch (_msg)
 	{
 	case WM_CREATE:
 	{
-		//initialization.
+		//initialisation of canvas
 		g_pCanvas = new CCanvas();
 		g_pCanvas->Initialise(_hwnd, 1500, 800);
-
+		//initialisation of colour picker
 		ColorPicker.lStructSize = sizeof(ColorPicker);
 		ColorPicker.hwndOwner = _hwnd;
 		ColorPicker.rgbResult = RGB(0, 0, 0);
 		ColorPicker.lpCustColors = customColors;
 		ColorPicker.Flags = CC_ANYCOLOR | CC_FULLOPEN;
+
+		g_hMenu = GetMenu(_hwnd); // menu handle
+
 		// Return Success.
 		return (0);
 	}
@@ -180,16 +199,27 @@ break;*/
 	//All the Menu item ID's Go Here
 	case WM_COMMAND:
 	{
+
 		switch (LOWORD(_wparam))
 		{
+		//File
+		case ID_FILE_SAVE:
+		{
+			break;
+		}
+		case ID_FILE_OPEN:
+		{
+			break;
+		}
 		case ID_FILE_EXIT:
 		{
 			PostQuitMessage(0);
 			break;
 		}
-		case ID_HELP_ABOUT:
+		//Shape
+		case ID_FREEHAND:
 		{
-			MessageBox(_hwnd, L"This paint tool was developed by .............", L"Author Information", MB_OK | MB_ICONINFORMATION);
+			CurrentTool = FREEHAND;
 			break;
 		}
 		case ID_SHAPE_LINE:
@@ -197,19 +227,26 @@ break;*/
 			CurrentTool = LINESHAPE;
 			break;
 		}
+		case ID_SHAPE_R:
+		{
+			CurrentTool = RECTANGLESHAPE;
+		}
 		case ID_SHAPE_ELLIPSE:
 		{
 			CurrentTool = ELLIPSESHAPE;
 			break;
 		}
-		case ID_FREEHAND:
+		case ID_SHAPE_POLYGON:
 		{
-			CurrentTool = FREEHAND;
+			CurrentTool = POLYGONSHAPE;
 			break;
 		}
-		//PenWidth
+		//Pen
+		//Width
 		case ID_PEN_WIDTH_1:
 		{
+
+			CheckMenuItem(g_hMenu, ID_PEN_WIDTH_1, MF_BYCOMMAND | MF_CHECKED);
 			g_PenWidth = 1;
 			break;
 		}
@@ -233,13 +270,69 @@ break;*/
 			g_PenWidth = 5;
 			break;
 		}
+		//Colour
 		case ID_PEN_COLOR:
 		{
-			
 			if(ChooseColor(&ColorPicker)){
 			g_PenColor = ColorPicker.rgbResult;
 			}
+			break;
+		}
+		//Style
+		case ID_PEN_STYLE_SOLID:
+		{
+			g_PenStyle = PS_SOLID;
+			break;
+		}
+		case ID_PEN_STYLE_DOT:
+		{
+			g_PenStyle = PS_DOT;
+			break;
+		}
+		case ID_PEN_STYLE_DASH:
+		{
+			g_PenStyle = PS_DASH;
+			break;
+		}
+		case ID_PEN_STYLE_DASHDOT:
+		{
+			g_PenStyle = PS_DASHDOT;
+			break;
+		}
+		//Brush
+		//Colour
+		case ID_BRUSH_COLOR:
+		{
+			if (ChooseColor(&ColorPicker)) {
+				g_BrushColor = ColorPicker.rgbResult;
+			}
 		break;
+		}
+		case ID_BRUSH_STYLE_SOLID:
+		{
+			g_BrushStyle = BS_SOLID;
+			break;
+		}
+		case ID_BRUSH_STYLE_HOLLOW:
+		{
+			g_BrushStyle = BS_NULL;
+			break;
+		}
+		case ID_BRUSH_STYLE_HATCH:
+		{
+			g_BrushStyle = BS_HATCHED;
+			break;
+		}
+		case ID_BRUSH_STYLE_CROSSHATCH:
+		{
+			g_BrushStyle = HS_CROSS;
+			break;
+		}
+		//Help
+		case ID_HELP_ABOUT:
+		{
+			MessageBox(_hwnd, L"This paint tool was developed by .............", L"Author Information", MB_OK | MB_ICONINFORMATION);
+			break;
 		}
 		default:
 			break;
