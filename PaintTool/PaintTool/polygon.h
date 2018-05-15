@@ -24,24 +24,24 @@
 class CPolygon : public IShape
 {
 public:
-	CPolygon(int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, COLORREF _PenColor, int _iPenWidth);
+	CPolygon(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor, int _X, int _Y, POINT* _pPointList, int* _nPoints);
 	CPolygon();
 	virtual ~CPolygon();
 
 	virtual void Draw(HDC _hdc);
-	void SetFillColor(COLORREF _newColor);
-	void SetPenColor(COLORREF _newColor);
-	void AddPoint(POINT p);
-
 
 private:
-	COLORREF m_iFillColor;
-	COLORREF m_iPenColor;
+
 	POINT* m_pPointList;
-	int m_nPoints;
-	int m_iFillStyle;
+	int* m_nPoints;
+
+	EBRUSHSTYLE m_iBrushStyle;
+	int m_iHatchStyle;
+	COLORREF m_iFillColor;
 	int m_iPenStyle;
 	int m_iPenWidth;
+	int m_iPenColor;
+	COLORREF m_PenColor;
 };
 
 #endif

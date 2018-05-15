@@ -22,18 +22,22 @@
 
 #include "shape.h"
 
+
 class CEllipse : public IShape
 {
 public:
-	CEllipse(COLORREF _newColor, int, int);
+	CEllipse(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor, int _X, int _Y);
 	CEllipse();
 	virtual ~CEllipse();
 
 	virtual void Draw(HDC _hdc);
-	void SetColor(COLORREF _newColor);
-
-
 private:
+	EBRUSHSTYLE m_iBrushStyle;
+	int m_iHatchStyle;
+	COLORREF m_iFillColor;
+	int m_iPenStyle;
+	int m_iPenWidth;
+	int m_iPenColor;
 	COLORREF m_Color;
 };
 
