@@ -68,7 +68,7 @@ EBRUSHSTYLE g_BrushStyle = NOSTYLE;			// Brush Style
 CHOOSECOLOR ColorPicker;					// For Colour Picker Dialog
 COLORREF customColors[16];					// ""
 
-POINT g_pPointList[20];  					// Point List for Polygon
+POINT* g_pPointList;  					// Point List for Polygon
 int g_nPoints = 0;								// Point Counter
 
 
@@ -165,6 +165,10 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 					AddPoint(TempPoint);
 					break;
 				}
+				g_pPointList = new POINT[50];
+				AddPoint(TempPoint);
+				TempPoint.x++;
+				TempPoint.y++;
 				AddPoint(TempPoint);
 				g_pShape = new CPolygon(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY, g_pPointList, &g_nPoints);
 				g_pCanvas->AddShape(g_pShape);
@@ -182,10 +186,10 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		iPosX = static_cast<int>(LOWORD(_lparam));
 		iPosY = static_cast<int>(HIWORD(_lparam));
 		
-		if (CurrentTool == POLYGONSHAPE && g_nPoints > 0)
+		if (CurrentTool == POLYGONSHAPE && g_nPoints > 1)
 		{
-			g_pPointList[g_nPoints].x = iPosX;
-			g_pPointList[g_nPoints].y = iPosY;
+			g_pPointList[g_nPoints - 1].x = iPosX;
+			g_pPointList[g_nPoints - 1].y = iPosY;
 			InvalidateRect(_hwnd, NULL, TRUE);
 			break;
 		}
@@ -212,7 +216,8 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 	{
 		if (CurrentTool == POLYGONSHAPE) {
 
-			AddPoint(g_pPointList[0]);
+			delete g_pPointList;
+			g_nPoints = 0;
 			g_pShape = nullptr;
 		}
 	}

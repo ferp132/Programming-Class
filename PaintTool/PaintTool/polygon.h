@@ -34,6 +34,8 @@ private:
 
 	POINT* m_pPointList;
 	int* m_nPoints;
+	POINT* m_pThisPointList;
+
 
 	EBRUSHSTYLE m_iBrushStyle;
 	int m_iHatchStyle;

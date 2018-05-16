@@ -10,7 +10,7 @@ CPolygon::CPolygon(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillCol
 	m_iPenColor = _PenColor;
 	m_pPointList = _pPointList;
 	m_nPoints = _nPoints;
-
+	m_pThisPointList = new POINT[50];
 }
 
 CPolygon::CPolygon()
@@ -27,9 +27,16 @@ void CPolygon::Draw(HDC _hdc)
 	HPEN hPen;
 	HBRUSH hBrush;
 
+	for (int i = 0; i < sizeof(m_pPointList); i++)
+	{
+		m_pThisPointList[i] = m_pPointList[i];
+	}
+
 	//Initialise & Select Pen
 	hPen = CreatePen(m_iPenStyle, m_iPenWidth, m_iPenColor);
 	SelectObject(_hdc, hPen);
+
+
 
 	//Initialise & Select Brush
 	switch (m_iBrushStyle)
@@ -55,11 +62,11 @@ void CPolygon::Draw(HDC _hdc)
 	}
 
 	//Draw Polygon
-	Polygon(_hdc, m_pPointList, *m_nPoints);
+	Polygon(_hdc, m_pThisPointList, *m_nPoints);
 
-	//Delete pens after use
 	DeleteObject(hPen);
-	if (GetCurrentObject(_hdc, OBJ_BRUSH) == GetStockObject(NULL_BRUSH)) return; // If the Brush is Hollow, Just return.
-	else DeleteObject(hBrush);													 // Otherwise Delete The Brush We Created
+	if (GetCurrentObject(_hdc, OBJ_BRUSH) == GetStockObject(NULL_BRUSH)) return;	// If the Brush is Hollow, Just return.
+	else DeleteObject(hBrush);
+	return;
 }
 
