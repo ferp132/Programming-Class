@@ -49,33 +49,40 @@ enum ESHAPE
 
 //Global variables
 HINSTANCE g_hInstance;
-CCanvas* g_pCanvas;
+CCanvas* g_pCanvas = nullptr;
 
-IShape* g_pShape = 0;
+IShape* g_pShape = nullptr;
 HMENU g_hMenu;
 
 int iPosX, iPosY;							// Mouse Position
 
 COLORREF g_PenColor = RGB(0, 0, 0);			// Pen Colour
-COLORREF g_BrushColor = RGB(0, 0, 0);		// Brush Colour
+COLORREF g_BrushColor = RGB(255, 255, 255);		// Brush Colour
 
 int g_PenWidth = 1;							// Line Width
 
 int g_PenStyle = PS_SOLID;					// Pen Style
 int g_HatchStyle = HS_CROSS;				// Hatch Style
-EBRUSHSTYLE g_BrushStyle = NOSTYLE;			// Brush Style
+EBRUSHSTYLE g_BrushStyle = SOLID;			// Brush Style
 
 CHOOSECOLOR ColorPicker;					// For Colour Picker Dialog
 COLORREF customColors[16];					// ""
+
+COLORREF g_bgColor;
+int g_bgMode = TRANSPARENT;
+RECT rect;
 
 
 ESHAPE CurrentTool;							// Stores current tool being used
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-void MenuChecker(HMENU &Menu, UINT MenuItem) 
+void GameLoop()
 {
-
+	if (g_pCanvas != nullptr)
+	{
+		g_pCanvas->Draw();
+	}
 }
 
 LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam)
@@ -92,6 +99,9 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 	{
 		//initialisation of canvas
 		g_pCanvas = new CCanvas();
+
+		GetClientRect(_hwnd, &rect);
+
 		g_pCanvas->Initialise(_hwnd, 1500, 800);
 
 		//initialisation of colour picker
@@ -109,10 +119,8 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 	break;
 	case WM_LBUTTONDOWN:									// when the left button is pressed
 	{
-		
 		iPosX = static_cast<int>(LOWORD(_lparam));			// find the pointer location
 		iPosY = static_cast<int>(HIWORD(_lparam));
-
 			switch (CurrentTool)							// find the current shape
 			{
 			case FREEHAND:
@@ -122,20 +130,33 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 			}
 			case LINESHAPE:									
 			{
-				g_pShape = new CLine(g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY);  //Create A New Line and add it to the canvas
-				g_pCanvas->AddShape(g_pShape);
+				if (g_pShape == nullptr)
+				{
+					g_pShape = new CLine(g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY, g_bgColor, g_bgMode);  //Create A New Line and add it to the canvas
+					g_pCanvas->AddShape(g_pShape);
+					
+				}
 				break;
+				
 			}
 			case RECTANGLESHAPE:
 			{
-				g_pShape = new CRectangle(g_BrushStyle , g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY);
-				g_pCanvas->AddShape(g_pShape);
+				if (g_pShape == nullptr)
+				{
+					g_pShape = new CRectangle(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY, g_bgColor, g_bgMode);
+					g_pCanvas->AddShape(g_pShape);
+					break;
+				}
 				break;
 			}
 			case ELLIPSESHAPE:
 			{
-				g_pShape = new CEllipse(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY);
-				g_pCanvas->AddShape(g_pShape);
+				if (g_pShape == nullptr)
+				{
+					g_pShape = new CEllipse(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY, g_bgColor, g_bgMode);
+					g_pCanvas->AddShape(g_pShape);
+					break;
+				}
 				break;
 			}
 			case POLYGONSHAPE:
@@ -144,32 +165,23 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 				{
 					g_pShape->SetStartX(iPosX);
 					g_pShape->SetStartY(iPosY);
-					break;
 				}
-				g_pShape = new CPolygon(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY);
-				g_pCanvas->AddShape(g_pShape);
+				if (g_pShape == nullptr)
+				{
+					g_pShape = new CPolygon(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY, g_bgColor, g_bgMode);
+					g_pCanvas->AddShape(g_pShape);
+				}
 				break;
 			}
 			default: break;
-			}
-
-			InvalidateRect(_hwnd, NULL, TRUE);
-
-			return (0);
+			}	
+			
+			break;
 	}
-	break;
 	case WM_MOUSEMOVE:
 	{
 		iPosX = static_cast<int>(LOWORD(_lparam));
 		iPosY = static_cast<int>(HIWORD(_lparam));
-		
-		//if (CurrentTool == POLYGONSHAPE && g_pShape != nullptr)
-		//{
-		//	g_pShape->SetEndX(iPosX);
-		//	g_pShape->SetEndY(iPosY);
-		//	InvalidateRect(_hwnd, NULL, TRUE);
-		//	break;
-		//}
 
 		// Test if left button is down...
 		if (MK_LBUTTON)
@@ -178,22 +190,26 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 			{
 				g_pShape->SetEndX(iPosX);
 				g_pShape->SetEndY(iPosY);
-				InvalidateRect(_hwnd, NULL, TRUE);
+				// InvalidateRect(_hwnd, NULL, TRUE);
 			}						
 		}
-			return (0);
+		return (0);
 	}
 	break;
+
 	case WM_LBUTTONUP:
 	{
-		if(CurrentTool != POLYGONSHAPE) g_pShape = nullptr;
+		if(CurrentTool != POLYGONSHAPE) 
+			g_pShape = nullptr;
 		break;
 	}
 	case WM_RBUTTONDOWN:
 	{
-		if (CurrentTool == POLYGONSHAPE) {
+		if (CurrentTool == POLYGONSHAPE) 
+		{
 			g_pShape = nullptr;
 		}
+		break;
 	}
 	case WM_PAINT:
 	{
@@ -201,8 +217,8 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		
 		//Painting Code goes here:
 	
-		if (g_pCanvas != nullptr)
-			g_pCanvas->Draw();
+		/*if (g_pCanvas != nullptr)
+			g_pCanvas->Draw();*/
 
 		EndPaint(_hwnd, &ps);
 		// Return Success.
@@ -340,12 +356,6 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 			g_BrushStyle = SOLID;
 			break;
 		}
-		case ID_BRUSH_STYLE_HOLLOW:
-		{
-			CheckMenuRadioItem(hmenu, ID_BRUSH_STYLE_SOLID, ID_BRUSH_STYLE_CROSSHATCH, ID_BRUSH_STYLE_HOLLOW, MF_BYCOMMAND);
-			g_BrushStyle = NOSTYLE;
-			break;
-		}
 		case ID_BRUSH_STYLE_HATCH:
 		{
 			CheckMenuRadioItem(hmenu, ID_BRUSH_STYLE_SOLID, ID_BRUSH_STYLE_CROSSHATCH, ID_BRUSH_STYLE_HATCH, MF_BYCOMMAND);
@@ -359,6 +369,24 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 			g_BrushStyle = HATCH;
 			g_HatchStyle = HS_CROSS;
 			break;
+		}
+		//Background
+		case ID_BACKGROUND_COLOUR:
+		{
+			if (ChooseColor(&ColorPicker)) {
+				g_bgColor = ColorPicker.rgbResult;
+			}
+		break;
+		}
+		case ID_BACKGROUND_OPAQUE:
+		{
+			g_bgMode = OPAQUE;
+		break;
+		}
+		case ID_BACKGROUND_TRANSPARENT:
+		{
+			g_bgMode = TRANSPARENT;
+		break;
 		}
 		//Help
 		case ID_HELP_ABOUT:
@@ -375,6 +403,7 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 	case WM_DESTROY:
 	{
 		delete g_pCanvas;
+		g_pCanvas = nullptr;
 
 		// Kill the application, this sends a WM_QUIT message.
 		PostQuitMessage(0);
@@ -459,6 +488,7 @@ int WINAPI WinMain(HINSTANCE _hInstance,
 			// Send the message to the window proc.
 			DispatchMessage(&msg);
 		}
+		GameLoop();
 	}
 	// Return to Windows like this...
 	return (static_cast<int>(msg.wParam));

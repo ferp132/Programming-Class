@@ -25,7 +25,7 @@ class CLine : public IShape
 {
 public:
 	//CLine(int _iStartX, int _iStartY, int _iEndX, int _iEndY, COLORREF _newColour, int _iStyle, int _iWidth); 
-	CLine(int _iStyle, int _iWidth, COLORREF _newColor, int _iStartX, int _iStartY);
+	CLine(int _iStyle, int _iWidth, COLORREF _newColor, int _iStartX, int _iStartY, COLORREF _bgColor, int _bgMode);
 	CLine();
 	virtual ~CLine();
 
@@ -34,7 +34,8 @@ public:
 	
 
 private:
-	
+	COLORREF m_bgColor;
+	int m_bgMode;
 	int m_iStyle;
 	int m_iWidth;
 	COLORREF m_Color;

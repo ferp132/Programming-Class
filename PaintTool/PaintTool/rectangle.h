@@ -26,13 +26,16 @@
 class CRectangle : public IShape
 {
 public:
-	CRectangle(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenwidth, COLORREF _PenColor, int _X, int _Y);
+	CRectangle(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenwidth, COLORREF _PenColor, int _X, int _Y, COLORREF _bgColor, int _bgMode);
 	CRectangle();
 	virtual ~CRectangle();
 
 	virtual void Draw(HDC _hdc);
 
 private:
+	COLORREF m_bgColor;
+	int m_bgMode;
+
 	EBRUSHSTYLE m_iBrushStyle;
 	int m_iHatchStyle;
 	COLORREF m_iFillColor;

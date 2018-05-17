@@ -1,6 +1,6 @@
 #include "polygon.h"
 
-CPolygon::CPolygon(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor, int _X, int _Y)
+CPolygon::CPolygon(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor, int _X, int _Y, COLORREF _bgColor, int _bgMode)
 {
 	m_iBrushStyle = _iBrushStyle;
 	m_iHatchStyle = _iHatchStyle;
@@ -11,10 +11,11 @@ CPolygon::CPolygon(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillCol
 	m_nPoints = 0;
 	TempPoint.x = _X;
 	TempPoint.y = _Y;
+	m_iEndX = _X;
+	m_iEndY = _Y;
 	AddPoint(TempPoint);
-	m_iEndX = TempPoint.x++;
-	m_iEndY = TempPoint.y++;
-	AddPoint(TempPoint);
+	m_bgMode = _bgMode;
+	m_bgColor = _bgColor;
 }
 
 CPolygon::CPolygon()
@@ -39,6 +40,10 @@ void CPolygon::Draw(HDC _hdc)
 	HPEN hPen;
 	HBRUSH hBrush;
 
+	SetBkColor(_hdc, m_bgColor);
+	SetBkMode(_hdc, m_bgMode);
+
+
 	TempPoint.x = m_iEndX;
 	TempPoint.y = m_iEndY;
 	if (m_iStartX == m_iEndX && m_iStartY == m_iEndY)
@@ -46,7 +51,7 @@ void CPolygon::Draw(HDC _hdc)
 		AddPoint(TempPoint);
 	}
 
-	m_pPointList[m_nPoints-1] = TempPoint;
+	m_pPointList[m_nPoints] = TempPoint;
 
 	//Initialise & Select Pen
 	hPen = CreatePen(m_iPenStyle, m_iPenWidth, m_iPenColor);
@@ -57,11 +62,6 @@ void CPolygon::Draw(HDC _hdc)
 	//Initialise & Select Brush
 	switch (m_iBrushStyle)
 	{
-	case NOSTYLE:
-	{
-		SelectObject(_hdc, GetStockObject(NULL_BRUSH));
-		break;
-	}
 	case SOLID:
 	{
 		hBrush = CreateSolidBrush(m_iFillColor);
@@ -81,8 +81,7 @@ void CPolygon::Draw(HDC _hdc)
 	Polygon(_hdc, m_pPointList, m_nPoints);
 
 	DeleteObject(hPen);
-	if (GetCurrentObject(_hdc, OBJ_BRUSH) == GetStockObject(NULL_BRUSH)) return;	// If the Brush is Hollow, Just return.
-	else DeleteObject(hBrush);
+	DeleteObject(hBrush);
 	return;
 }
 

@@ -26,12 +26,14 @@
 class CEllipse : public IShape
 {
 public:
-	CEllipse(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor, int _X, int _Y);
+	CEllipse(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor, int _X, int _Y, COLORREF _bgColor, int _bgMode);
 	CEllipse();
 	virtual ~CEllipse();
 
 	virtual void Draw(HDC _hdc);
 private:
+	COLORREF m_bgColor;
+	int m_bgMode;
 	EBRUSHSTYLE m_iBrushStyle;
 	int m_iHatchStyle;
 	COLORREF m_iFillColor;

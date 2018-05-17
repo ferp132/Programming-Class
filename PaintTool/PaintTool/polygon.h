@@ -24,7 +24,7 @@
 class CPolygon : public IShape
 {
 public:
-	CPolygon(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor,int _X, int _Y);
+	CPolygon(EBRUSHSTYLE _iBrushStyle, int _iHatchStyle, COLORREF _FillColor, int _iPenStyle, int _iPenWidth, COLORREF _PenColor,int _X, int _Y, COLORREF _bgColor, int _bgMode);
 	CPolygon();
 	virtual ~CPolygon();
 	void AddPoint(POINT p);
@@ -32,6 +32,9 @@ public:
 	virtual void Draw(HDC _hdc);
 
 private:
+
+	COLORREF m_bgColor;
+	int m_bgMode;
 
 	POINT m_pPointList[50];
 	int m_nPoints;

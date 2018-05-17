@@ -1,8 +1,10 @@
 #include "canvas.h"
+#include "backBuffer.h"
 #include "shape.h"
 
 CCanvas::CCanvas()
 {
+	m_pBackBuffer = new CBackBuffer();
 }
 
 CCanvas::~CCanvas()
@@ -15,28 +17,37 @@ CCanvas::~CCanvas()
 
 bool CCanvas::Initialise(HWND _hwnd, int _iWidth, int _iHeight)
 {
-	hwnd = _hwnd;
-	return false;
+	//hwnd = _hwnd;
+
+	m_pBackBuffer->Initialise(_hwnd, _iWidth, _iHeight);
+
+	// m_pBackBuffer->Clear();
+
+	return true;
 }
 
 CBackBuffer * CCanvas::GetBackBuffer()
 {
-	return nullptr;
+	return m_pBackBuffer;
 }
 
 bool CCanvas::Draw()
 {
-	HDC hdc = GetDC(hwnd);
+	//HDC hdc = GetDC(hwnd);
+
+	m_pBackBuffer->Clear();
 
 	// Draw here
 	for (IShape * shape : m_shapes)
 	{
-		shape->Draw(hdc);
+		shape->Draw(m_pBackBuffer->GetBFDC());
 	}
 
-	ReleaseDC(hwnd, hdc);
+	m_pBackBuffer->Present();
 
-	return false;
+	//ReleaseDC(hwnd, hdc);
+
+	return true;
 }
 
 void CCanvas::Save(HWND _hwnd)
