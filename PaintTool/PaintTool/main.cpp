@@ -68,9 +68,6 @@ EBRUSHSTYLE g_BrushStyle = NOSTYLE;			// Brush Style
 CHOOSECOLOR ColorPicker;					// For Colour Picker Dialog
 COLORREF customColors[16];					// ""
 
-POINT* g_pPointList;  					// Point List for Polygon
-int g_nPoints = 0;								// Point Counter
-
 
 ESHAPE CurrentTool;							// Stores current tool being used
 
@@ -81,18 +78,11 @@ void MenuChecker(HMENU &Menu, UINT MenuItem)
 
 }
 
-void AddPoint(POINT p)
-{
-	g_pPointList[g_nPoints] = p;
-	g_nPoints++;
-
-	return;
-}
-
 LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam)
 {
 	PAINTSTRUCT ps; // Used in WM_PAINT.
 	HDC hdc;        // Handle to a device context.
+	HMENU hmenu = GetMenu(_hwnd);
 
 //	RECT rect;
 
@@ -117,21 +107,11 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		return (0);
 	}
 	break;
-	case WM_RBUTTONDOWN:									
-	{
-		g_pShape = nullptr;
-		return (0);
-	}
-	break;
 	case WM_LBUTTONDOWN:									// when the left button is pressed
 	{
 		
 		iPosX = static_cast<int>(LOWORD(_lparam));			// find the pointer location
 		iPosY = static_cast<int>(HIWORD(_lparam));
-
-		POINT TempPoint;
-		TempPoint.x = iPosX;
-		TempPoint.y = iPosY;
 
 			switch (CurrentTool)							// find the current shape
 			{
@@ -160,22 +140,19 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 			}
 			case POLYGONSHAPE:
 			{
-				if (g_nPoints > 0)
+				if (g_pShape != nullptr)
 				{
-					AddPoint(TempPoint);
+					g_pShape->SetStartX(iPosX);
+					g_pShape->SetStartY(iPosY);
 					break;
 				}
-				g_pPointList = new POINT[50];
-				AddPoint(TempPoint);
-				TempPoint.x++;
-				TempPoint.y++;
-				AddPoint(TempPoint);
-				g_pShape = new CPolygon(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY, g_pPointList, &g_nPoints);
+				g_pShape = new CPolygon(g_BrushStyle, g_HatchStyle, g_BrushColor, g_PenStyle, g_PenWidth, g_PenColor, iPosX, iPosY);
 				g_pCanvas->AddShape(g_pShape);
 				break;
 			}
 			default: break;
 			}
+
 			InvalidateRect(_hwnd, NULL, TRUE);
 
 			return (0);
@@ -186,13 +163,13 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		iPosX = static_cast<int>(LOWORD(_lparam));
 		iPosY = static_cast<int>(HIWORD(_lparam));
 		
-		if (CurrentTool == POLYGONSHAPE && g_nPoints > 1)
-		{
-			g_pPointList[g_nPoints - 1].x = iPosX;
-			g_pPointList[g_nPoints - 1].y = iPosY;
-			InvalidateRect(_hwnd, NULL, TRUE);
-			break;
-		}
+		//if (CurrentTool == POLYGONSHAPE && g_pShape != nullptr)
+		//{
+		//	g_pShape->SetEndX(iPosX);
+		//	g_pShape->SetEndY(iPosY);
+		//	InvalidateRect(_hwnd, NULL, TRUE);
+		//	break;
+		//}
 
 		// Test if left button is down...
 		if (MK_LBUTTON)
@@ -212,12 +189,9 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		if(CurrentTool != POLYGONSHAPE) g_pShape = nullptr;
 		break;
 	}
-	case WM_LBUTTONDBLCLK:
+	case WM_RBUTTONDOWN:
 	{
 		if (CurrentTool == POLYGONSHAPE) {
-
-			delete g_pPointList;
-			g_nPoints = 0;
 			g_pShape = nullptr;
 		}
 	}
@@ -264,21 +238,25 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		case ID_SHAPE_LINE:
 		{
 			CurrentTool = LINESHAPE;
+			CheckMenuRadioItem(hmenu, ID_SHAPE_LINE, ID_SHAPE_POLYGON, ID_SHAPE_LINE, MF_BYCOMMAND);
 			break;
 		}
 		case ID_SHAPE_R:
 		{
 			CurrentTool = RECTANGLESHAPE;
+			CheckMenuRadioItem(hmenu, ID_SHAPE_LINE, ID_SHAPE_POLYGON, ID_SHAPE_R, MF_BYCOMMAND);
 			break;
 		}
 		case ID_SHAPE_ELLIPSE:
 		{
 			CurrentTool = ELLIPSESHAPE;
+			CheckMenuRadioItem(hmenu, ID_SHAPE_LINE, ID_SHAPE_POLYGON, ID_SHAPE_ELLIPSE, MF_BYCOMMAND);
 			break;
 		}
 		case ID_SHAPE_POLYGON:
 		{
 			CurrentTool = POLYGONSHAPE;
+			CheckMenuRadioItem(hmenu, ID_SHAPE_LINE, ID_SHAPE_POLYGON, ID_SHAPE_POLYGON, MF_BYCOMMAND);
 			break;
 		}
 		//Pen
@@ -286,27 +264,31 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		case ID_PEN_WIDTH_1:
 		{
 
-			CheckMenuItem(g_hMenu, ID_PEN_WIDTH_1, MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuRadioItem(hmenu, ID_PEN_WIDTH_1, ID_PEN_WIDTH_5, ID_PEN_WIDTH_1, MF_BYCOMMAND);
 			g_PenWidth = 1;
 			break;
 		}
 		case ID_PEN_WIDTH_2:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_WIDTH_1, ID_PEN_WIDTH_5, ID_PEN_WIDTH_2, MF_BYCOMMAND);
 			g_PenWidth = 2;
 			break;
 		}
 		case ID_PEN_WIDTH_3:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_WIDTH_1, ID_PEN_WIDTH_5, ID_PEN_WIDTH_3, MF_BYCOMMAND);
 			g_PenWidth = 3;
 			break;
 		}
 		case ID_PEN_WIDTH_4:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_WIDTH_1, ID_PEN_WIDTH_5, ID_PEN_WIDTH_4, MF_BYCOMMAND);
 			g_PenWidth = 4;
 			break;
 		}
 		case ID_PEN_WIDTH_5:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_WIDTH_1, ID_PEN_WIDTH_5, ID_PEN_WIDTH_5, MF_BYCOMMAND);
 			g_PenWidth = 5;
 			break;
 		}
@@ -321,21 +303,25 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		//Style
 		case ID_PEN_STYLE_SOLID:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_STYLE_SOLID, ID_PEN_STYLE_DASHDOT, ID_PEN_STYLE_SOLID, MF_BYCOMMAND);
 			g_PenStyle = PS_SOLID;
 			break;
 		}
 		case ID_PEN_STYLE_DOT:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_STYLE_SOLID, ID_PEN_STYLE_DASHDOT, ID_PEN_STYLE_DOT, MF_BYCOMMAND);
 			g_PenStyle = PS_DOT;
 			break;
 		}
 		case ID_PEN_STYLE_DASH:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_STYLE_SOLID, ID_PEN_STYLE_DASHDOT, ID_PEN_STYLE_DASH, MF_BYCOMMAND);
 			g_PenStyle = PS_DASH;
 			break;
 		}
 		case ID_PEN_STYLE_DASHDOT:
 		{
+			CheckMenuRadioItem(hmenu, ID_PEN_STYLE_SOLID, ID_PEN_STYLE_DASHDOT, ID_PEN_STYLE_DASHDOT, MF_BYCOMMAND);
 			g_PenStyle = PS_DASHDOT;
 			break;
 		}
@@ -350,22 +336,26 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 		}
 		case ID_BRUSH_STYLE_SOLID:
 		{
+			CheckMenuRadioItem(hmenu, ID_BRUSH_STYLE_SOLID, ID_BRUSH_STYLE_CROSSHATCH, ID_BRUSH_STYLE_SOLID, MF_BYCOMMAND);
 			g_BrushStyle = SOLID;
 			break;
 		}
 		case ID_BRUSH_STYLE_HOLLOW:
 		{
+			CheckMenuRadioItem(hmenu, ID_BRUSH_STYLE_SOLID, ID_BRUSH_STYLE_CROSSHATCH, ID_BRUSH_STYLE_HOLLOW, MF_BYCOMMAND);
 			g_BrushStyle = NOSTYLE;
 			break;
 		}
 		case ID_BRUSH_STYLE_HATCH:
 		{
+			CheckMenuRadioItem(hmenu, ID_BRUSH_STYLE_SOLID, ID_BRUSH_STYLE_CROSSHATCH, ID_BRUSH_STYLE_HATCH, MF_BYCOMMAND);
 			g_BrushStyle = HATCH;
 			g_HatchStyle = HS_DIAGCROSS;
 			break;
 		}
 		case ID_BRUSH_STYLE_CROSSHATCH:
 		{
+			CheckMenuRadioItem(hmenu, ID_BRUSH_STYLE_SOLID, ID_BRUSH_STYLE_CROSSHATCH, ID_BRUSH_STYLE_CROSSHATCH, MF_BYCOMMAND);
 			g_BrushStyle = HATCH;
 			g_HatchStyle = HS_CROSS;
 			break;
