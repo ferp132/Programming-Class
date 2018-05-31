@@ -1,0 +1,26 @@
+<Object type="BunkerPiece" resource="GameObjects\GameOverText.xml">
+
+  <PositionComponent>
+    <Position X="107" Y="262" />
+  </PositionComponent>
+
+  <PhysicsComponent>
+    <BoundingBox X="0" Y="0" Width="28" Height ="28" />
+  </PhysicsComponent>
+
+  <RenderComponent>
+    <Resource>109</Resource>
+    <Layer>1</Layer>
+  </RenderComponent>
+
+  <AnimationComponent>
+    <Animations>
+      <Middle X="0" Y="0" Width="28" Height="28" HorizontalCells="4" VerticalCells="1" />
+      <TopLeft X="0" Y="28" Width="28" Height="28" HorizontalCells="4" VerticalCells="1" />
+      <TopRight X="0" Y="56" Width="28" Height="28" HorizontalCells="4" VerticalCells="1" />
+      <BottomLeft X="0" Y="84" Width="28" Height="28" HorizontalCells="4" VerticalCells="1" />
+      <BottomRight X="0" Y="112" Width="28" Height="28" HorizontalCells="4" VerticalCells="1" />
+    </Animations>
+  </AnimationComponent>
+
+</Object>

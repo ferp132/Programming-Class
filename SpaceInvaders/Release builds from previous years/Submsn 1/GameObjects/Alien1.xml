@@ -1,0 +1,30 @@
+<Object type="Alien" resource="GameObjects\Alien1.xml">
+
+  <PositionComponent>
+    <Position X="200" Y="200" />
+  </PositionComponent>
+
+  <PhysicsComponent>
+    <BoundingBox X="0" Y="0" Width="48" Height="32" />
+    <BoundToScreen/>
+  </PhysicsComponent>
+
+  <RenderComponent>
+    <Resource>104</Resource>
+    <Layer>1</Layer>
+  </RenderComponent>
+  
+  <AnimationComponent>
+    <Animations>
+      <State1 X="0" Y="0" Width="48" Height="32" HorizontalCells="1" VerticalCells="1" />
+      <State2 X="48" Y="0" Width="48" Height="32" HorizontalCells="1" VerticalCells="1" />
+    </Animations>
+  </AnimationComponent>
+
+  <AlienComponent>
+    <Worth>10</Worth>
+    <InitialBulletVelocity>300</InitialBulletVelocity>
+    <BulletAcceleration>2000</BulletAcceleration>
+  </AlienComponent>
+
+</Object>

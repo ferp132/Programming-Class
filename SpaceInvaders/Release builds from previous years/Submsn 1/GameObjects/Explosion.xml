@@ -1,0 +1,16 @@
+<Object type="Explosion" resource="GameObjects\Explosion.xml">
+
+  <PositionComponent>
+    <Position X="0" Y="0" />
+  </PositionComponent>
+
+  <RenderComponent>
+    <Resource>106</Resource>
+    <Layer>1</Layer>
+  </RenderComponent>
+
+  <DestroyAfterComponent>
+    <WaitTime>0.2</WaitTime>
+  </DestroyAfterComponent>
+
+</Object>

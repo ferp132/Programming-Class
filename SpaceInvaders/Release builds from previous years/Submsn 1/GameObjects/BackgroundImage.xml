@@ -1,0 +1,12 @@
+<Object type="Background" resource="GameObjects\BackgroundImage.xml">
+
+  <PositionComponent>
+    <Position X="0" Y="0" />
+  </PositionComponent>
+
+  <RenderComponent>
+    <Resource>105</Resource>
+    <Layer>0</Layer>
+  </RenderComponent>
+
+</Object>

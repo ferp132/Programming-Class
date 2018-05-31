@@ -1,0 +1,23 @@
+<Object type="MysterShip" resource="GameObjects\MysteryShip.xml">
+
+  <PositionComponent>
+    <Position X="-63" Y="50" />
+  </PositionComponent>
+
+  <PhysicsComponent>
+    <BoundingBox X="0" Y="0" Width="64" Height="28" />
+    <DestroyOffScreen/>
+  </PhysicsComponent>
+
+  <RenderComponent>
+    <Resource>107</Resource>
+    <Layer>1</Layer>
+  </RenderComponent>
+
+  <AlienComponent>
+    <Worth>50</Worth>
+    <InitialBulletVelocity>300</InitialBulletVelocity>
+    <BulletAcceleration>2000</BulletAcceleration>
+  </AlienComponent>
+
+</Object>

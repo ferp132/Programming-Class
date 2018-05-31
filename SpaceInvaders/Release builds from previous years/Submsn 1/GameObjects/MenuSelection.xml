@@ -1,0 +1,20 @@
+<Object type="MenuSelection" resource="GameObjects\MenuSelection.xml">
+
+  <PositionComponent>
+    <Position X="82" Y="190" />
+  </PositionComponent>
+
+  <RenderComponent>
+    <Resource>111</Resource>
+    <Layer>1</Layer>
+  </RenderComponent>
+
+  <AnimationComponent>
+    <Animations>
+      <Play X="0" Y="0" Width="213" Height="96" HorizontalCells="1" VerticalCells="1" />
+      <Highscores X="213" Y="0" Width="213" Height="96" HorizontalCells="1" VerticalCells="1" />
+      <Quit X="426" Y="0" Width="213" Height="96" HorizontalCells="1" VerticalCells="1" />
+    </Animations>
+  </AnimationComponent>
+
+</Object>

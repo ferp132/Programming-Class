@@ -1,0 +1,16 @@
+<Object type="GameOverText" resource="GameObjects\GameOverText.xml">
+
+  <PositionComponent>
+    <Position X="107" Y="262" />
+  </PositionComponent>
+
+  <RenderComponent>
+    <Resource>108</Resource>
+    <Layer>3</Layer>
+  </RenderComponent>
+
+  <DestroyAfterComponent>
+    <WaitTime>3.0</WaitTime>
+  </DestroyAfterComponent>
+
+</Object>

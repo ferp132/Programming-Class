@@ -1,0 +1,23 @@
+<Object type="Bullet" resource="GameObjects\Bullet.xml">
+
+  <PositionComponent>
+    <Position X="0" Y="0" />
+  </PositionComponent>
+
+  <PhysicsComponent>
+    <BoundingBox X="0" Y="0" Width="4" Height="20" />
+    <DestroyOffScreen/>
+  </PhysicsComponent>
+
+  <RenderComponent>
+    <Resource>103</Resource>
+    <Layer>2</Layer>
+  </RenderComponent>
+
+  <AnimationComponent>
+    <Animations>
+      <Default X="0" Y="0" Width="4" Height="20" HorizontalCells="1" VerticalCells="1" />
+    </Animations>
+  </AnimationComponent>
+
+</Object>

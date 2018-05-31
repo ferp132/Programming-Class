@@ -1,0 +1,31 @@
+<Object type="LaserCannon" resource="GameObjects\LaserCannon.xml">
+
+	<PositionComponent>
+		<Position X="430" Y="640" />
+	</PositionComponent>
+
+  <PhysicsComponent>
+    <BoundingBox X="0" Y="0" Width="60" Height="32" />
+    <BoundToScreen/>
+  </PhysicsComponent>
+
+   <RenderComponent>
+    <Resource>102</Resource>
+    <Layer>1</Layer>
+  </RenderComponent>
+
+  <AnimationComponent>
+    <Animations>
+      <Default X="0" Y="0" Width="60" Height="32" HorizontalCells="1" VerticalCells="1" />
+      <Death X="60" Y="0" Width="60" Height="32" HorizontalCells="6" VerticalCells="1" />
+    </Animations>
+  </AnimationComponent>
+
+  <CannonComponent>
+    <StartingLives>3</StartingLives>
+    <StartingAmmo>1</StartingAmmo>
+    <InitialBulletVelocity>-800</InitialBulletVelocity>
+    <BulletAcceleration>1</BulletAcceleration>
+  </CannonComponent>
+  
+</Object>

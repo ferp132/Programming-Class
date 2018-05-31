@@ -1,0 +1,25 @@
+<Object type="AlienBullet" resource="GameObjects\Bullet.xml">
+
+  <PositionComponent>
+    <Position X="0" Y="0" />
+  </PositionComponent>
+
+  <PhysicsComponent>
+    <BoundingBox X="0" Y="0" Width="4" Height="28" />
+    <DestroyOffScreen/>
+  </PhysicsComponent>
+
+  <RenderComponent>
+    <Resource>103</Resource>
+    <Layer>2</Layer>
+  </RenderComponent>
+
+  <AnimationComponent>
+    <Animations>
+      <Anim1 X="8" Y="0" Width="12" Height="28" HorizontalCells="2" VerticalCells="1"/>
+      <Anim2 X="32" Y="0" Width="12" Height="28" HorizontalCells="1" VerticalCells="1"/>
+      <Anim3 X="44" Y="0" Width="12" Height="28" HorizontalCells="2" VerticalCells="1"/>
+    </Animations>
+  </AnimationComponent>
+
+</Object>
