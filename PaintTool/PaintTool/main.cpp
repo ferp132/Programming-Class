@@ -99,9 +99,7 @@ LRESULT CALLBACK WindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lpara
 	{
 		//initialisation of canvas
 		g_pCanvas = new CCanvas();
-
 		GetClientRect(_hwnd, &rect);
-
 		g_pCanvas->Initialise(_hwnd, 1500, 800);
 
 		//initialisation of colour picker
