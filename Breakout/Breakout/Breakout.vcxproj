@@ -170,6 +170,19 @@
   <ItemGroup>
     <ResourceCompile Include="Breakout.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Sprites\Background.bmp" />
+    <Image Include="Sprites\BackgroundMask.bmp" />
+    <Image Include="Sprites\BallMask.bmp" />
+    <Image Include="Sprites\BallSprite.bmp" />
+    <Image Include="Sprites\BrickMask.bmp" />
+    <Image Include="Sprites\BrickSprite.bmp" />
+    <Image Include="Sprites\PaddleMask.bmp" />
+    <Image Include="Sprites\PaddleSprite.bmp" />
+    <Image Include="Sprites\SpaceInvaders\SpaceInvaders_Enemy1.bmp" />
+    <Image Include="Sprites\SpaceInvaders\SpaceInvaders_Enemy2.bmp" />
+    <Image Include="Sprites\SpaceInvaders\SpaceInvaders_Enemy3.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

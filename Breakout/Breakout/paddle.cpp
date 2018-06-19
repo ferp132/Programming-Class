@@ -57,6 +57,14 @@ CPaddle::Process(float _fDeltaTick)
     
 	float fHalfPaddleW = static_cast<float>(m_pSprite->GetWidth() / 2.0);
 
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (m_bCanFire)
+		{
+			m_bFire = 1;
+		}
+
+	}
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
 		m_fX += 400.0f * _fDeltaTick;
@@ -75,4 +83,24 @@ CPaddle::Process(float _fDeltaTick)
 	}
 	
 	CEntity::Process(_fDeltaTick);
+}
+
+void CPaddle::SetCanFire(bool Fire)
+{
+	m_bCanFire = Fire;
+}
+
+void CPaddle::SetFire(bool Fire)
+{
+	m_bFire = Fire;
+}
+
+bool CPaddle::GetCanFire()
+{
+	return m_bCanFire;
+}
+
+bool CPaddle::GetFire()
+{
+	return m_bFire;
 }

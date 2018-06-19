@@ -35,13 +35,18 @@ public:
     CBrick();
     virtual ~CBrick();
 
-    virtual bool Initialise();
+    virtual bool Initialise(float _fVelocityX);
 
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
 
     void SetHit(bool _b);
     bool IsHit() const;
+
+	float GetVelocityX() const;
+	float GetVelocityY() const;
+	void SetVelocityX(float _fX);
+	void SetVelocityY(float _fY);
 
 protected:
 
@@ -54,6 +59,8 @@ public:
 
 protected:
     bool m_bHit;
+	float m_fVelocityX;
+	float m_fVelocityY;
 
 private:
 

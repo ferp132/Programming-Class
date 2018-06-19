@@ -39,9 +39,11 @@ CBrick::~CBrick()
 }
 
 bool
-CBrick::Initialise()
+CBrick::Initialise(float _fVelocityX)
 {
-    VALIDATE(CEntity::Initialise(IDB_BRICKSPRITE, IDB_BRICKMASK));
+    VALIDATE(CEntity::Initialise(IDB_INVADER_1, IDB_BRICKMASK));
+
+	m_fVelocityX = _fVelocityX;
 
     return (true);
 }
@@ -60,6 +62,7 @@ CBrick::Process(float _fDeltaTick)
 {
     if (!m_bHit)
     {
+		m_fX += m_fVelocityX;
         CEntity::Process(_fDeltaTick);
     }
 }
@@ -74,5 +77,29 @@ bool
 CBrick::IsHit() const
 {
     return (m_bHit);
+}
+
+float
+CBrick::GetVelocityX() const
+{
+	return (m_fVelocityX);
+}
+
+float
+CBrick::GetVelocityY() const
+{
+	return (m_fVelocityY);
+}
+
+void
+CBrick::SetVelocityX(float _fX)
+{
+	m_fVelocityX = _fX;
+}
+
+void
+CBrick::SetVelocityY(float _fY)
+{
+	m_fVelocityY = _fY;
 }
 

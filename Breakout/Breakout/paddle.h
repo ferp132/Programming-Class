@@ -40,6 +40,11 @@ public:
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
 
+	void SetCanFire(bool Fire);
+	void SetFire(bool Fire);
+	bool GetCanFire();
+	bool GetFire();
+
 
 protected:
 
@@ -51,6 +56,8 @@ private:
 public:
 
 protected:
+	bool m_bCanFire;
+	bool m_bFire;
 
 private:
 

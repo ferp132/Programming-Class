@@ -28,10 +28,10 @@
 // Implementation
 
 CBall::CBall()
-: m_fVelocityX(0.0f)
-, m_fVelocityY(0.0f)
+: m_fVelocityX(0.0f),
+m_fVelocityY(0.0f)
 {
-
+	m_bHit = 0;
 }
 
 CBall::~CBall()
@@ -56,14 +56,20 @@ CBall::Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVelocit
 void
 CBall::Draw()
 {
-    CEntity::Draw();
+	if (!m_bHit)
+	{
+		CEntity::Draw();
+	}
 }
 
 void
 CBall::Process(float _fDeltaTick)
 {
-    m_fX += m_fVelocityX * _fDeltaTick;
-    m_fY += m_fVelocityY * _fDeltaTick;
+	if (!m_bHit)
+	{
+		m_fX += m_fVelocityX * _fDeltaTick;
+		m_fY += m_fVelocityY * _fDeltaTick;
+	}
 
     CEntity::Process(_fDeltaTick);
 }
@@ -90,6 +96,24 @@ void
 CBall::SetVelocityY(float _fY)
 {
     m_fVelocityY = _fY;
+}
+
+void
+CBall::SetHit(bool _b)
+{
+	m_bHit = _b;
+
+	if (!_b)
+	{
+		m_fX = -100;
+		m_fY = -100;
+	}
+}
+
+bool
+CBall::IsHit() const
+{
+	return (m_bHit);
 }
 
 float 
