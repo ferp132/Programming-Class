@@ -97,9 +97,9 @@ CLevel::Initialise(int _iWidth, int _iHeight)
     m_pPaddle->SetX(_iWidth / 2.0f);
     m_pPaddle->SetY(_iHeight - ( 1.5f * m_pPaddle->GetHeight()));
 
-    const int kiNumBricks = 36;
+    const int kiNumBricks = 70;
     const int kiStartX = 20;
-    const int kiGap = 5;
+    const int kiGap = 30;
 
     int iCurrentX = kiStartX;
     int iCurrentY = kiStartX;
