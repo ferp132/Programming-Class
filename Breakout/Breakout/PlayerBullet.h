@@ -14,8 +14,8 @@
 
 #pragma once
 
-#if !defined(__BALL_H__)
-#define __BALL_H__
+#if !defined(__PLAYERBULLET_H__)
+#define __PLAYERBULLET_H__
 
 // Library Includes
 
@@ -29,12 +29,12 @@
 // Prototypes
 class CSprite;
 
-class CBall : public CEntity
+class CPlayerBullet : public CEntity
 {
     // Member Functions
 public:
-    CBall();
-    virtual ~CBall();
+    CPlayerBullet();
+    virtual ~CPlayerBullet();
 
     virtual bool Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVelocityY);
 
@@ -54,8 +54,8 @@ public:
 protected:
 
 private:
-    CBall(const CBall& _kr);
-    CBall& operator= (const CBall& _kr);
+    CPlayerBullet(const CPlayerBullet& _kr);
+    CPlayerBullet& operator= (const CPlayerBullet& _kr);
 
     // Member Variables
 public:
@@ -70,4 +70,4 @@ private:
 };
 
 
-#endif    // __BALL_H__
+#endif    // __PLAYERBULLET_H__

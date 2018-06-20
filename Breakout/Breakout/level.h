@@ -28,7 +28,7 @@
 // Constants
 
 // Prototypes
-class CBall;
+class CPlayerBullet;
 class CPaddle;
 class CBrick;
 class CFPSCounter;
@@ -51,16 +51,18 @@ public:
     int GetBricksRemaining() const;
 
 protected:
-    void ProcessBallWallCollision();
+    void ProcessPlayerBulletWallCollision();
+	void ProcessInvaderBulletWallCollision();
 	void ProcessInvaderWallCollision();
 //	void ProcessPaddleWallCollison();
-    void ProcessBallPaddleCollision();
-    void ProcessBallBrickCollision();
+    void ProcessPlayerBulletPaddleCollision();
+    void ProcessPlayerBulletBrickCollision();
 	void ProcessPlayerBulletFire();
+	void ProcessInvaderFire();
 
     void ProcessCheckForWin();
 
-    void ProcessBallBounds();
+    void ProcessPlayerBulletBounds();
 
     void UpdateScoreText();
     void DrawScore();
@@ -77,7 +79,8 @@ public:
 
 protected:
 	CBackGround* m_pBackground;
-    CBall* m_pBall;
+    CPlayerBullet* m_pPlayerBullet;
+	CPlayerBullet* pInvaderBullets[3];
     CPaddle* m_pPaddle;
     std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
@@ -86,6 +89,7 @@ protected:
     int m_iHeight;
 
     int m_iBricksRemaining;
+	int InvaderBulletCount = 0;
 
     std::string m_strScore;
 

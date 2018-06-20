@@ -19,7 +19,7 @@
 #include "utils.h"
 
 // This Includes
-#include "Ball.h"
+#include "PlayerBullet.h"
 
 // Static Variables
 
@@ -27,20 +27,20 @@
 
 // Implementation
 
-CBall::CBall()
+CPlayerBullet::CPlayerBullet()
 : m_fVelocityX(0.0f),
 m_fVelocityY(0.0f)
 {
-	m_bHit = 0;
+	m_bHit = 1;
 }
 
-CBall::~CBall()
+CPlayerBullet::~CPlayerBullet()
 {
 
 }
 
 bool
-CBall::Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVelocityY)
+CPlayerBullet::Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVelocityY)
 {
     VALIDATE(CEntity::Initialise(IDB_BALLSPRITE, IDB_BALLMASK));
     
@@ -54,7 +54,7 @@ CBall::Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVelocit
 }
 
 void
-CBall::Draw()
+CPlayerBullet::Draw()
 {
 	if (!m_bHit)
 	{
@@ -63,7 +63,7 @@ CBall::Draw()
 }
 
 void
-CBall::Process(float _fDeltaTick)
+CPlayerBullet::Process(float _fDeltaTick)
 {
 	if (!m_bHit)
 	{
@@ -75,49 +75,43 @@ CBall::Process(float _fDeltaTick)
 }
 
 float 
-CBall::GetVelocityX() const
+CPlayerBullet::GetVelocityX() const
 {
     return (m_fVelocityX);
 }
 
 float 
-CBall::GetVelocityY() const
+CPlayerBullet::GetVelocityY() const
 {
     return (m_fVelocityY);
 }
 
 void 
-CBall::SetVelocityX(float _fX)
+CPlayerBullet::SetVelocityX(float _fX)
 {
     m_fVelocityX = _fX;
 }
 
 void 
-CBall::SetVelocityY(float _fY)
+CPlayerBullet::SetVelocityY(float _fY)
 {
     m_fVelocityY = _fY;
 }
 
 void
-CBall::SetHit(bool _b)
+CPlayerBullet::SetHit(bool _b)
 {
 	m_bHit = _b;
-
-	if (!_b)
-	{
-		m_fX = -100;
-		m_fY = -100;
-	}
 }
 
 bool
-CBall::IsHit() const
+CPlayerBullet::IsHit() const
 {
 	return (m_bHit);
 }
 
 float 
-CBall::GetRadius() const
+CPlayerBullet::GetRadius() const
 {
     return (GetWidth() / 2.0f);
 }

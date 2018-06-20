@@ -41,7 +41,7 @@ CBrick::~CBrick()
 bool
 CBrick::Initialise(float _fVelocityX)
 {
-    VALIDATE(CEntity::Initialise(IDB_INVADER_1, IDB_BRICKMASK));
+    VALIDATE(CEntity::Initialise(IDB_BRICKSPRITE, IDB_BRICKMASK));
 
 	m_fVelocityX = _fVelocityX;
 

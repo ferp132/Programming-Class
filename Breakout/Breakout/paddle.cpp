@@ -59,11 +59,6 @@ CPaddle::Process(float _fDeltaTick)
 
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		if (m_bCanFire)
-		{
-			m_bFire = 1;
-		}
-
 	}
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
@@ -77,7 +72,7 @@ CPaddle::Process(float _fDeltaTick)
 	{
 		m_fX = fHalfPaddleW;
 	}
-	else if (m_fX + fHalfPaddleW >= 385)
+	else if (m_fX + fHalfPaddleW >= 1000 - fHalfPaddleW)
 	{
 		m_fX = 385-fHalfPaddleW;
 	}
