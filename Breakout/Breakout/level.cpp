@@ -86,8 +86,7 @@ CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pBackground->SetX((float)m_iWidth / 2);
 	m_pBackground->SetY((float)m_iHeight / 2);
 
-	m_pBall = new CBall();
-    VALIDATE(m_pBall->Initialise(m_iWidth / 2.0f, 50, fBallVelX, fBallVelY));
+	
 
     m_pPaddle = new CPaddle();
     VALIDATE(m_pPaddle->Initialise());
@@ -97,10 +96,13 @@ CLevel::Initialise(int _iWidth, int _iHeight)
     m_pPaddle->SetX(_iWidth / 2.0f);
     m_pPaddle->SetY(_iHeight - ( 1.5f * m_pPaddle->GetHeight()));
 
+	m_pBall = new CBall();
+	VALIDATE(m_pBall->Initialise(m_pPaddle->GetX(), m_pPaddle->GetY(), fBallVelX, fBallVelY));
+
     const int kiNumBricks = 55;
     const int kiStartX = 75;
     const int kiGap = 20;
-	const float InitialVelocity = 1;
+	const float InitialVelocity = 100;
 
     int iCurrentX = kiStartX;
     int iCurrentY = static_cast<int>(m_pPaddle->GetY()) - 11 * 60; //40 = drop height, 11 = number of drops (change this to a variable later set based on difficulty)

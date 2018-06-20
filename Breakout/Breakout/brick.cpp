@@ -62,7 +62,7 @@ CBrick::Process(float _fDeltaTick)
 {
     if (!m_bHit)
     {
-		m_fX += m_fVelocityX;
+		m_fX += m_fVelocityX * _fDeltaTick;
         CEntity::Process(_fDeltaTick);
     }
 }
