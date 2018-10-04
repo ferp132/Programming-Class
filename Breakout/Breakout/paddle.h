@@ -44,6 +44,8 @@ public:
 	void SetFire(bool Fire);
 	bool GetCanFire();
 	bool GetFire();
+	void LoseALife();
+	int GetLives();
 
 
 protected:
@@ -58,6 +60,7 @@ public:
 protected:
 	bool m_bCanFire;
 	bool m_bFire;
+	int Lives;
 
 private:
 

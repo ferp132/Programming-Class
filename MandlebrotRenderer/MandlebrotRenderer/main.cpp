@@ -1,13 +1,12 @@
-#include <SDL.h>
 #include <Windows.h>
+#include <SDL.h>
 
+int WIDTH = 800;
+int HEIGHT = 800;
 
-int WIDTH = 1000;
-int HEIGHT = 1000;
+int MaxIts = 500;			//Max Iterations :: How many times the mandlebrot function will be applied. Higher values will result in more defined geometry (good for zooming)
 
-int MaxIts = 200;	//Max Iterations :: How many times the mandlebrot function will be applied. Higher values will result in more defined geometry (good for zooming)
-
-long double min = -2.0;
+long double min = -2.0;		
 long double max =  2.0;
 
 long double ZoomFactor = 1;
@@ -19,8 +18,6 @@ long double map(long double Value, long double in_min, long double in_max, long 
 
 int main(int argc, char* argv[])
 {
-
-
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	SDL_Window* window;
@@ -30,19 +27,22 @@ int main(int argc, char* argv[])
 	SDL_CreateWindowAndRenderer(1920, 1080, 0, &window, &renderer);
 	SDL_RenderSetLogicalSize(renderer, WIDTH, HEIGHT);
 
-	int count = 0;
+//	int count = 0;
 
 	bool Exit = false;
 	while (!Exit)
 	{
-		max -= 0.1 * ZoomFactor;
-		min += 0.15 * ZoomFactor;
-		//ZoomFactor *= 0.9349;
-		ZoomFactor *= 0.9;
-		MaxIts += 5;
 
-		if (count > 30)
-			MaxIts *= 1.02;
+		WIDTH += 10;
+		HEIGHT += 10;
+
+//		max -= 0.1 * ZoomFactor;
+//		min += 0.15 * ZoomFactor;
+//		ZoomFactor *= 0.9;
+//		MaxIts += 10;
+
+//		if (count > 30)
+//			MaxIts *= 1.02;
 
 		SDL_RenderPresent(renderer);
 
@@ -54,11 +54,9 @@ int main(int argc, char* argv[])
 				return 0;
 			if (GetKeyState('A') & 0x8000)
 			{
-				WIDTH -= 10;
 			}
 			if (GetKeyState('D') & 0x8000)
 			{
-				WIDTH += 10;
 			}
 
 			for (int y = 0; y < HEIGHT; y++) // y = b	
@@ -95,15 +93,15 @@ int main(int argc, char* argv[])
 
 				
 
-				int R = map(Brightness * MaxIts, 0, 255 * 255, 0, 255);
-				int G = map(Brightness * NumIts, 0, 255 * 255, 0, 255);
-				int B = map(Brightness * Brightness, 0, 255 * 255, 0, 255);
+				int R = Brightness + Brightness;
+				int G = Brightness * 2;
+				int B = Brightness / 2;
 
 				SDL_SetRenderDrawColor(renderer, R, G, B, 255);
 				SDL_RenderDrawPoint(renderer, x, y);
 			}
 		}
-		count++;
+		//count++;
 	}
 
 

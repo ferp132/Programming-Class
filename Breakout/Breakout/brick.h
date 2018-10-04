@@ -61,6 +61,7 @@ protected:
     bool m_bHit;
 	float m_fVelocityX;
 	float m_fVelocityY;
+	float MovementCounter;
 
 private:
 

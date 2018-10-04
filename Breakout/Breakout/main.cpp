@@ -24,7 +24,7 @@
 #include "level.h"
 #include "paddle.h"
 
-const int kiWidth = 1000;
+const int kiWidth = 800;
 const int kiHeight = 800;
 
 

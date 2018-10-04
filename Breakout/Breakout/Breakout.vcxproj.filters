@@ -138,5 +138,8 @@
     <Image Include="Sprites\SpaceInvaders\SpaceInvaders_Enemy3.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="SpaceInvaders_Enemy1_Mask.BMP">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

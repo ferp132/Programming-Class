@@ -93,7 +93,7 @@ CLevel::Initialise(int _iWidth, int _iHeight)
     m_iHeight = _iHeight;
 
     const float fPlayerBulletVelX = 0.0f;
-    const float fPlayerBulletVelY = -300.0f;
+    const float fPlayerBulletVelY = -350.0f;
 
 	m_pBackground = new CBackGround();
 	VALIDATE(m_pBackground->Initialise());
@@ -117,7 +117,7 @@ CLevel::Initialise(int _iWidth, int _iHeight)
     const int kiNumBricks = 55;
     const int kiStartX = 75;
     const int kiGap = 10;
-	const float InitialVelocity = 200;
+	const float InitialVelocity = 15;
 
     int iCurrentX = kiStartX;
     int iCurrentY = static_cast<int>(m_pPaddle->GetY()) - (11 + 5) * 45; //40 = drop height, 11 = number of drops (change this to a variable later set based on difficulty)
@@ -201,7 +201,7 @@ CLevel::Process(float _fDeltaTick)
 	ProcessInvaderBulletWallCollision();
 	ProcessInvaderWallCollision();
 	//ProcessPaddleWallCollison();
-    ProcessPlayerBulletPaddleCollision();
+    ProcessInvaderBulletPaddleCollision();
     ProcessPlayerBulletBrickCollision();
 	ProcessPlayerBulletFire();
 	ProcessInvaderFire();
@@ -297,7 +297,7 @@ CLevel::ProcessInvaderWallCollision()
                 for (unsigned int j = 0; j < m_vecBricks.size(); ++j)
                 {
                     m_vecBricks[j]->SetVelocityX(m_vecBricks[j]->GetVelocityX() * -1);
-					m_vecBricks[j]->SetX(m_vecBricks[j]->GetX() + 10);
+					m_vecBricks[j]->SetX(m_vecBricks[j]->GetX() + fBrickW * 2);
                     m_vecBricks[j]->SetY(m_vecBricks[j]->GetY() + 45);	
 
 					if (m_vecBricks[j]->GetY() > m_pPaddle->GetY())
@@ -307,12 +307,12 @@ CLevel::ProcessInvaderWallCollision()
 				}
 				return;
 			} 
-			else if (fBrickW + fBrickX > 1000 - fHalfBrickW)
+			else if (fHalfBrickW + fBrickX > m_iWidth - fHalfBrickW)
 			{
 				for (unsigned int j = 0; j < m_vecBricks.size(); ++j)
 				{
 					m_vecBricks[j]->SetVelocityX(m_vecBricks[j]->GetVelocityX() * -1);
-					m_vecBricks[j]->SetX(m_vecBricks[j]->GetX() + -10);
+					m_vecBricks[j]->SetX(m_vecBricks[j]->GetX() - fBrickW * 2);
 					m_vecBricks[j]->SetY(m_vecBricks[j]->GetY() + 45);
 
 					if (m_vecBricks[j]->GetY() > m_pPaddle->GetY() - 10)
@@ -326,27 +326,35 @@ CLevel::ProcessInvaderWallCollision()
 }
 
 void
-CLevel::ProcessPlayerBulletPaddleCollision()
+CLevel::ProcessInvaderBulletPaddleCollision()
 {
-    float fPlayerBulletR = m_pPlayerBullet->GetRadius();
+	for (int i = 0; i < 3; i++)
+	{
+		float fInvaderBulletR = pInvaderBullets[i]->GetRadius();
 
-    float fPlayerBulletX = m_pPlayerBullet->GetX();
-    float fPlayerBulletY = m_pPlayerBullet->GetY(); 
+		float fInvaderBulletX = pInvaderBullets[i]->GetX();
+		float fInvaderBulletY = pInvaderBullets[i]->GetY();
 
-    float fPaddleX = m_pPaddle->GetX();
-    float fPaddleY = m_pPaddle->GetY();
+		float fPaddleX = m_pPaddle->GetX();
+		float fPaddleY = m_pPaddle->GetY();
 
-    float fPaddleH = m_pPaddle->GetHeight();
-    float fPaddleW = m_pPaddle->GetWidth();
+		float fPaddleH = m_pPaddle->GetHeight();
+		float fPaddleW = m_pPaddle->GetWidth();
 
-    if ((fPlayerBulletX + fPlayerBulletR > fPaddleX - fPaddleW / 2) && //PlayerBullet.right > paddle.left
-        (fPlayerBulletX - fPlayerBulletR < fPaddleX + fPaddleW / 2) && //PlayerBullet.left < paddle.right
-        (fPlayerBulletY + fPlayerBulletR > fPaddleY - fPaddleH / 2) && //PlayerBullet.bottom > paddle.top
-        (fPlayerBulletY - fPlayerBulletR < fPaddleY + fPaddleH / 2))  //PlayerBullet.top < paddle.bottom
-    {
-        m_pPlayerBullet->SetY((fPaddleY - fPaddleH / 2) - fPlayerBulletR);  //Set the PlayerBullet.bottom = paddle.top; to prevent the PlayerBullet from going through the paddle!
-        m_pPlayerBullet->SetVelocityY(m_pPlayerBullet->GetVelocityY() * -1); //Reverse PlayerBullet's Y direction
-    }
+		if ((fInvaderBulletX + fInvaderBulletR > fPaddleX - fPaddleW / 2) && //InvaderBullet.right > paddle.left
+			(fInvaderBulletX - fInvaderBulletR < fPaddleX + fPaddleW / 2) && //InvaderBullet.left < paddle.right
+			(fInvaderBulletY + fInvaderBulletR > fPaddleY - fPaddleH / 2) && //InvaderBullet.bottom > paddle.top
+			(fInvaderBulletY - fInvaderBulletR < fPaddleY + fPaddleH / 2))  //InvaderBullet.top < paddle.bottom
+		{
+			pInvaderBullets[i]->SetHit(true);
+			m_pPaddle->SetX(m_iWidth / 2);
+			m_pPaddle->LoseALife();
+			if (m_pPaddle->GetLives() < 1)
+			{
+				CGame::GetInstance().GameOverLost();
+			}
+		}
+	}
 }
 
 void
@@ -378,6 +386,11 @@ CLevel::ProcessPlayerBulletBrickCollision()
 				m_pPlayerBullet->SetHit(true);
 				m_vecBricks[i]->SetHit(true);
                 SetBricksRemaining(GetBricksRemaining() - 1);
+
+				for (unsigned int j = 0; j < m_vecBricks.size(); ++j)
+				{
+					m_vecBricks[j]->SetVelocityX(m_vecBricks[j]->GetVelocityX() * 1.01);
+				}
             }
         }
     }

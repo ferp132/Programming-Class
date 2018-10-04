@@ -173,6 +173,7 @@
     <ResourceCompile Include="Breakout.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="SpaceInvaders_Enemy1_Mask.BMP" />
     <Image Include="Sprites\Background.bmp" />
     <Image Include="Sprites\BackgroundMask.bmp" />
     <Image Include="Sprites\BallMask.bmp" />

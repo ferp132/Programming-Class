@@ -55,7 +55,7 @@ protected:
 	void ProcessInvaderBulletWallCollision();
 	void ProcessInvaderWallCollision();
 //	void ProcessPaddleWallCollison();
-    void ProcessPlayerBulletPaddleCollision();
+    void ProcessInvaderBulletPaddleCollision();
     void ProcessPlayerBulletBrickCollision();
 	void ProcessPlayerBulletFire();
 	void ProcessInvaderFire();

@@ -74,8 +74,8 @@
     <LibraryPath>C:\Users\Louis\Documents\GitHub\Programming-Class\MandlebrotRenderer\MandlebrotRenderer\Dependencies\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Louis\Documents\GitHub\Programming-Class\MandlebrotRenderer\MandlebrotRenderer\Dependencies\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Louis\Documents\GitHub\Programming-Class\MandlebrotRenderer\MandlebrotRenderer\Dependencies\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Dependencies\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Dependencies\SDL2\lib\x64_lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,13 +124,14 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\Louis\Documents\GitHub\Programming-Class\MandlebrotRenderer\MandlebrotRenderer\Dependencies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Dependencies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mandlebrotcpp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

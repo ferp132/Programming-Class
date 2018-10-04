@@ -42,6 +42,8 @@ CPaddle::Initialise()
 {
     VALIDATE(CEntity::Initialise(IDB_PADDLESPRITE, IDB_PADDLEMASK));
 
+	Lives = 3;
+
     return (true);
 }
 
@@ -98,4 +100,14 @@ bool CPaddle::GetCanFire()
 bool CPaddle::GetFire()
 {
 	return m_bFire;
+}
+
+void CPaddle::LoseALife()
+{
+	Lives--;
+}
+
+int CPaddle::GetLives()
+{
+	return Lives;
 }
