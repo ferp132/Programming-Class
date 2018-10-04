@@ -27,7 +27,7 @@ void BrotRenderer::Render(int x, int y, int NumIts)
 	int Brightness = (int)(Map(NumIts, 0, MaxIts, 0, 255));
 
 	SDL_SetRenderDrawColor(RendererID, CalcColourR(Brightness), CalcColourG(Brightness), CalcColourB(Brightness), 255);
-	SDL_RenderDrawPoint(RendererID, x, y);
+	SDL_RenderDrawPoint(RendererID, x, Line);
 }
 
 int BrotRenderer::CalcColourR(int Brightness)
@@ -77,6 +77,7 @@ void BrotRenderer::CalculateBrot()
 			Render(x, Line, NumIts);
 
 	}
+	SDL_RenderPresent(RendererID);
 		
 }
 

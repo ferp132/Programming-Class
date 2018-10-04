@@ -32,5 +32,5 @@ public:
 		long double MinIn, long double MaxIn,
 		long double MinOut, long double MaxOut);
 	
-
+	int GetLine() { return Line; };
 };

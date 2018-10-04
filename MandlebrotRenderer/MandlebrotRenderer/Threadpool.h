@@ -2,7 +2,9 @@
 #include <vector>
 #include <thread>
 #include <atomic>
-
+#include <iostream>
+#include <functional>
+#include <condition_variable>
 
 #include "BrotRenderer.h"
 #include "WorkQueue.h"
@@ -20,14 +22,14 @@ public:
 	void DoWork();
 	void Submit(BrotRenderer WorkItem);
 	std::atomic_int& GetProcessed();
-
+	
 
 protected:
 	static Threadpool* Instance;
 
 private:
 	Threadpool();
-	Threadpool(unsigned int);
+	Threadpool(unsigned int InitMaxThreads);
 
 	std::atomic_bool Finished{ false };
 
