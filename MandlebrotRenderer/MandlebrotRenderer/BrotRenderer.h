@@ -23,7 +23,7 @@ public:
 	void		DoJob();
 	void		CalcColour(int R, int G, int B);
 	void		Render();
-	long double CalculateBrot();
+	int CalculateBrot();
 	long double Map(long double Value,
 		long double MinIn, long double MaxIn,
 		long double MinOut, long double MaxOut);

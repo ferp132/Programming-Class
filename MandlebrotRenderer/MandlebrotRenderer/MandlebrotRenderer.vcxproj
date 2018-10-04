@@ -130,8 +130,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BrotRenderer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mandlebrotcpp.cpp" />
+    <ClCompile Include="Threadpool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BrotRenderer.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="Threadpool.h" />
+    <ClInclude Include="WorkQueue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

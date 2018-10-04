@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
 	while (!Exit)
 	{
 
-		WIDTH += 10;
-		HEIGHT += 10;
+
+
 
 //		max -= 0.1 * ZoomFactor;
 //		min += 0.15 * ZoomFactor;
@@ -54,9 +54,11 @@ int main(int argc, char* argv[])
 				return 0;
 			if (GetKeyState('A') & 0x8000)
 			{
+				
 			}
 			if (GetKeyState('D') & 0x8000)
 			{
+				
 			}
 
 			for (int y = 0; y < HEIGHT; y++) // y = b	
