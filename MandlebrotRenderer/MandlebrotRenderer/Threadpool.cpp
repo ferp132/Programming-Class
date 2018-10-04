@@ -1,5 +1,7 @@
 #include "Threadpool.h"
 
+Threadpool* Threadpool::Instance = nullptr;
+
 Threadpool::Threadpool()
 {
 	MaxThreads = std::thread::hardware_concurrency();
@@ -28,6 +30,20 @@ Threadpool::~Threadpool()
 	Queue = 0;
 }
 
+Threadpool& Threadpool::GetInstance()
+{
+		if (Instance == nullptr)
+			Instance = new Threadpool();
+
+		return (*Instance);
+}
+
+void Threadpool::DestroyInstance()
+{
+	delete Instance;
+	Instance = 0;
+}
+
 void Threadpool::Init()
 {
 	Queue = new WorkQueue<BrotRenderer>();
@@ -50,11 +66,23 @@ void Threadpool::DoWork()
 {
 	while (!Finished)
 	{
-		Queue->Blocking_Pop(WorkItem);
+		BrotRenderer WorkItem;
+
+		if (Queue->NonBlocking_Pop(WorkItem))
+		{
+			WorkItem.CalculateBrot();
+			NumProcessed++;
+		}
+		else continue;
 	}
 }
 
 void Threadpool::Submit(BrotRenderer WorkItem)
 {
 	Queue->Push(WorkItem);
+}
+
+std::atomic_int & Threadpool::GetProcessed()
+{
+	return NumProcessed;
 }

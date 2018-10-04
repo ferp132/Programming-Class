@@ -11,7 +11,7 @@ public:
 	void Push(const T& item);
 
 	bool NonBlocking_Pop(T& WorkItem);
-	Blocking_Pop(T& WorkItem);
+	void Blocking_Pop(T& WorkItem);
 
 	bool empty() const;
 
@@ -44,7 +44,7 @@ inline bool WorkQueue<T>::NonBlocking_Pop(T & WorkItem)
 }
 
 template<typename T>
-inline WorkQueue<T>::Blocking_Pop(T & WorkItem)
+inline void WorkQueue<T>::Blocking_Pop(T & WorkItem)
 {
 	std::unique_lock<std::mutex> _lock(WorkQueueMutex);
 

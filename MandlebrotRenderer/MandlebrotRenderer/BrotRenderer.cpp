@@ -1,33 +1,60 @@
 #include "BrotRenderer.h"
 
-BrotRenderer::BrotRenderer(SDL_Renderer * InitRenderer, long double InitMin, long double InitMax, int InitMaxIts, int InitWidth, int InitHeight)
+BrotRenderer::BrotRenderer()
 {
+}
 
+BrotRenderer::BrotRenderer( int InitLine, SDL_Renderer * InitRenderer,
+							long double InitMin, long double InitMax, 
+							int InitMaxIts, int InitWidth, int InitHeight)
+{
+	Line = InitLine;
+	RendererID = InitRenderer;
+	Min = InitMin;
+	Max = InitMax;
+	MaxIts = InitMaxIts;
+	WIDTH = InitWidth;
+	HEIGHT = InitHeight;
+	ZoomFactor = 1;
 }
 
 BrotRenderer::~BrotRenderer()
 {
 }
 
-void BrotRenderer::CalcColour(int R, int G, int B)
+void BrotRenderer::Render(int x, int y, int NumIts)
 {
+	int Brightness = (int)(Map(NumIts, 0, MaxIts, 0, 255));
+
+	SDL_SetRenderDrawColor(RendererID, CalcColourR(Brightness), CalcColourG(Brightness), CalcColourB(Brightness), 255);
+	SDL_RenderDrawPoint(RendererID, x, y);
 }
 
-void BrotRenderer::Render()
+int BrotRenderer::CalcColourR(int Brightness)
 {
+	return (int)(Map(Brightness * Brightness, 0, 255 * 255, 0, 255));
 }
 
-int BrotRenderer::CalculateBrot()
+int BrotRenderer::CalcColourG(int Brightness)
 {
-	int NumIts = 0;
+	return (int)(Map(Brightness - Brightness / 2, 0, 255 - 255 / 2, 0, 255));
+}
+
+int BrotRenderer::CalcColourB(int Brightness)
+{
+	return (int)(Map(Brightness + Brightness / 2, 0, 255 + 255 / 2, 0, 255));
+}
+
+void BrotRenderer::CalculateBrot()
+{
+	
 
 	for (int x = 0; x < WIDTH; x++)		 // x = a
 	{
-		for (int y = 0; y < HEIGHT; y++) // y = b	
-		{
+			int NumIts = 0;
 
 			long double a = Map(x, 0, WIDTH, Min, Max);
-			long double b = Map(y, 0, HEIGHT, Min, Max);
+			long double b = Map(Line, 0, HEIGHT, Min, Max);
 
 			long double oa = a;
 			long double ob = b;
@@ -46,9 +73,11 @@ int BrotRenderer::CalculateBrot()
 
 				NumIts++;
 			}
-		}
+
+			Render(x, Line, NumIts);
+
 	}
-		return NumIts;
+		
 }
 
 long double BrotRenderer::Map(long double Value, long double MinIn, long double MaxIn, long double MinOut, long double MaxOut)
