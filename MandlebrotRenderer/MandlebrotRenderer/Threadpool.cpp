@@ -65,16 +65,16 @@ void Threadpool::Stop()
 void Threadpool::DoWork()
 {
 
-	std::cout << std::endl << "Thread with id " << std::this_thread::get_id() << " -Start-" << std::endl;
+//	std::cout << std::endl << "Thread with id " << std::this_thread::get_id() << " -Start-" << std::endl;
 	while (!Finished)
 	{
 		BrotRenderer WorkItem;
 
 		if (Queue->NonBlocking_Pop(WorkItem))
 		{
-			std::cout << std::endl << "Thread with id " << std::this_thread::get_id() << " is working on item " << WorkItem.GetLine() << " in the work queue" << std::endl;
+			std::cout << std::endl << "Thread with id " << std::this_thread::get_id() << " is working on line " << WorkItem.GetLine() << " in the work queue" << std::endl;
 			WorkItem.CalculateBrot();
-			std::cout << std::endl << "Thread with id " << std::this_thread::get_id() << " finished processing item " << WorkItem.GetLine() << std::endl;
+//			std::cout << std::endl << "Thread with id " << std::this_thread::get_id() << " finished processing item " << WorkItem.GetLine() << std::endl;
 			NumProcessed++;
 		}
 		else continue;

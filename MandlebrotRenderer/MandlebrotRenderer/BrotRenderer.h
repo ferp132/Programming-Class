@@ -23,7 +23,7 @@ public:
 	BrotRenderer(int InitLine, SDL_Renderer* InitRenderer, long double InitMin = -2.0, long double InitMax = 2.0, int InitMaxIts = 200, int InitWidth = 1000, int InitHeight = 1000);
 	~BrotRenderer();
 
-	void		Render(int x, int y, int NumIts);
+	void		Render(int x, int NumIts);
 	int 		CalcColourR(int Brightness);
 	int 		CalcColourG(int Brightness);
 	int 		CalcColourB(int Brightness);

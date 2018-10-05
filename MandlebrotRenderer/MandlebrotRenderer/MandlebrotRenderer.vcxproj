@@ -145,14 +145,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BrotRenderer.cpp" />
+    <ClCompile Include="fwThreadPool.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Threadpool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrotRenderer.h" />
-    <ClInclude Include="Task.h" />
-    <ClInclude Include="Threadpool.h" />
-    <ClInclude Include="WorkQueue.h" />
+    <ClInclude Include="fwThreadPool.h" />
+    <ClInclude Include="fwWorkQueue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -37,9 +37,9 @@ public:
 		WorkQueueQ.pop();
 	}
 
-	bool empty() const
+	bool CheckEmpty() const
 	{
-		std::lock_guard<std::mutex> _lock(m_WorkQMutex);
+		std::lock_guard<std::mutex> _lock(WorkQueueMutex);
 		return WorkQueueQ.empty();
 	}
 

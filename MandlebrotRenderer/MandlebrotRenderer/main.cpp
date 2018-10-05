@@ -1,8 +1,9 @@
 #include <Windows.h>
 #include <SDL.h>
+#include <iostream>
 
 #include "BrotRenderer.h"
-#include "Threadpool.h"
+#include "fwThreadPool.h"
 
 int WIDTH = 800;
 int HEIGHT = 800;
@@ -31,13 +32,13 @@ int main(int argc, char* argv[])
 	SDL_CreateWindowAndRenderer(800, 800, 0, &window, &renderer);
 	SDL_RenderSetLogicalSize(renderer, WIDTH, HEIGHT);
 
-	Threadpool& threadpool = Threadpool::GetInstance();
-	threadpool.Init();
+	ThreadPool& threadpool = ThreadPool::GetInstance();
+	threadpool.Initialize();
 	threadpool.Start();
 	
 	SDL_RenderPresent(renderer);
-	while (1)
-	{
+	//while (1)
+	//{
 		for (int y = 0; y < HEIGHT; y++)
 		{
 			if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
@@ -54,10 +55,18 @@ int main(int argc, char* argv[])
 			{
 			}
 
+
+
 			threadpool.Submit(BrotRenderer(y, renderer, min, max, MaxIts, WIDTH, HEIGHT));
+
+
 		}
-		if (threadpool.GetProcessed() == HEIGHT)
-			threadpool.Stop();
+
+		SDL_RenderPresent(renderer);
+		std::cin.get();
+
+		while (threadpool.getItemsProcessed() != HEIGHT);
+			//threadpool.Stop();
 
 		threadpool.DestroyInstance();
 		/*
@@ -140,6 +149,6 @@ int main(int argc, char* argv[])
 				//count++;
 			}
 		*/
-	}
+	//}
 	return 0;
 }

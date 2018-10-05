@@ -22,11 +22,11 @@ BrotRenderer::~BrotRenderer()
 {
 }
 
-void BrotRenderer::Render(int x, int y, int NumIts)
+void BrotRenderer::Render(int x, int NumIts)
 {
 	int Brightness = (int)(Map(NumIts, 0, MaxIts, 0, 255));
 
-	SDL_SetRenderDrawColor(RendererID, CalcColourR(Brightness), CalcColourG(Brightness), CalcColourB(Brightness), 255);
+	SDL_SetRenderDrawColor(RendererID, 122, 57, 41, 255);
 	SDL_RenderDrawPoint(RendererID, x, Line);
 }
 
@@ -47,9 +47,7 @@ int BrotRenderer::CalcColourB(int Brightness)
 
 void BrotRenderer::CalculateBrot()
 {
-	
-
-	for (int x = 0; x < WIDTH; x++)		 // x = a
+	for (int x = 0; x < WIDTH; x++)
 	{
 			int NumIts = 0;
 
@@ -73,12 +71,9 @@ void BrotRenderer::CalculateBrot()
 
 				NumIts++;
 			}
-
-			Render(x, Line, NumIts);
-
+			Render(x, NumIts);
 	}
-	SDL_RenderPresent(RendererID);
-		
+
 }
 
 long double BrotRenderer::Map(long double Value, long double MinIn, long double MaxIn, long double MinOut, long double MaxOut)

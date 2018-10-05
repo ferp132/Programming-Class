@@ -24,18 +24,18 @@
     <ClCompile Include="BrotRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fwThreadPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Threadpool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BrotRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Task.h">
+    <ClInclude Include="fwWorkQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorkQueue.h">
+    <ClInclude Include="fwThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
