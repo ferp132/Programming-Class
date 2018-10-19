@@ -17,10 +17,12 @@ private:
 	int HEIGHT;
 
 	int Line;
+	int* BrotArray;
+	int* tempArray;
 
 public:
 	BrotRenderer();
-	BrotRenderer(int InitLine, SDL_Renderer* InitRenderer, long double InitMin = -2.0, long double InitMax = 2.0, int InitMaxIts = 200, int InitWidth = 1000, int InitHeight = 1000);
+	BrotRenderer(int* brotarray, int InitLine, SDL_Renderer* InitRenderer, long double InitMin = -2.0, long double InitMax = 2.0, int InitMaxIts = 200, int InitWidth = 1000, int InitHeight = 1000);
 	~BrotRenderer();
 
 	void		Render(int x, int NumIts);
@@ -33,4 +35,5 @@ public:
 		long double MinOut, long double MaxOut);
 	
 	int GetLine() { return Line; };
+	int* GetArray() { return tempArray; };
 };

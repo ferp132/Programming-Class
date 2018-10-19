@@ -1,12 +1,24 @@
 #include <Windows.h>
 #include <SDL.h>
 #include <iostream>
+#include <vector>
 
 #include "BrotRenderer.h"
 #include "fwThreadPool.h"
 
-int WIDTH = 800;
-int HEIGHT = 800;
+
+struct Pixel
+{
+	float red;
+	float green;
+	float blue;
+};
+
+
+const int WIDTH = 800;
+const int HEIGHT = 800;
+
+Pixel pixels[WIDTH *HEIGHT];
 
 int MaxIts = 500;			//Max Iterations :: How many times the mandlebrot function will be applied. Higher values will result in more defined geometry (good for zooming)
 
@@ -14,6 +26,8 @@ long double min = -2.0;
 long double max =  2.0;
 
 long double ZoomFactor = 1;
+
+int BrotArray[800*800];
 
 long double map(long double Value, long double in_min, long double in_max, long double out_min, long double out_max)
 {
@@ -36,41 +50,36 @@ int main(int argc, char* argv[])
 	threadpool.Initialize();
 	threadpool.Start();
 	
+	std::vector<BrotRenderer> brotvector;
+
 	SDL_RenderPresent(renderer);
 	//while (1)
 	//{
 		for (int y = 0; y < HEIGHT; y++)
 		{
-			if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
-				return 0;
-			if (GetKeyState('Q') & 0x8000)
+			BrotRenderer mybrot(BrotArray, y, renderer, min, max, MaxIts, WIDTH, HEIGHT);
+			threadpool.Submit(mybrot);
+			brotvector.push_back(mybrot);
+		}
+		while (threadpool.getItemsProcessed() != HEIGHT);
+
+		for (int i = 0; i < brotvector.size(); i++)
+		{
+			int * currentarray = brotvector.at(i).GetArray();
+			for (int j = 0; j < WIDTH; j++)
 			{
-				threadpool.DestroyInstance();
-				return 0;
+				int brightness = currentarray[j];
+
+				SDL_SetRenderDrawColor(renderer, brightness, brightness, brightness, 255);
+				SDL_RenderDrawPoint(renderer, j, i);
 			}
-			if (GetKeyState('A') & 0x8000)
-			{
-			}
-			if (GetKeyState('D') & 0x8000)
-			{
-			}
-
-
-
-			threadpool.Submit(BrotRenderer(y, renderer, min, max, MaxIts, WIDTH, HEIGHT));
-
-
 		}
 
 		SDL_RenderPresent(renderer);
 		std::cin.get();
-
-		while (threadpool.getItemsProcessed() != HEIGHT);
-			//threadpool.Stop();
-
 		threadpool.DestroyInstance();
-		/*
-			int count = 0;
+		
+			/*int count = 0;
 
 			bool Exit = false;
 			while (!Exit)
@@ -137,7 +146,6 @@ int main(int argc, char* argv[])
 							Brightness = 0;
 
 
-
 						int R = Brightness + Brightness;
 						int G = Brightness * 2;
 						int B = Brightness / 2;
@@ -147,8 +155,8 @@ int main(int argc, char* argv[])
 					}
 				}
 				//count++;
-			}
-		*/
+			}*/
+		
 	//}
 	return 0;
 }

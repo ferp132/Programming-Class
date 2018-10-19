@@ -4,10 +4,11 @@ BrotRenderer::BrotRenderer()
 {
 }
 
-BrotRenderer::BrotRenderer( int InitLine, SDL_Renderer * InitRenderer,
+BrotRenderer::BrotRenderer(int* brotarray, int InitLine, SDL_Renderer * InitRenderer,
 							long double InitMin, long double InitMax, 
 							int InitMaxIts, int InitWidth, int InitHeight)
 {
+	BrotArray = brotarray;
 	Line = InitLine;
 	RendererID = InitRenderer;
 	Min = InitMin;
@@ -16,6 +17,9 @@ BrotRenderer::BrotRenderer( int InitLine, SDL_Renderer * InitRenderer,
 	WIDTH = InitWidth;
 	HEIGHT = InitHeight;
 	ZoomFactor = 1;
+
+	tempArray = new int[800];
+
 }
 
 BrotRenderer::~BrotRenderer()
@@ -24,10 +28,6 @@ BrotRenderer::~BrotRenderer()
 
 void BrotRenderer::Render(int x, int NumIts)
 {
-	int Brightness = (int)(Map(NumIts, 0, MaxIts, 0, 255));
-
-	SDL_SetRenderDrawColor(RendererID, 122, 57, 41, 255);
-	SDL_RenderDrawPoint(RendererID, x, Line);
 }
 
 int BrotRenderer::CalcColourR(int Brightness)
@@ -71,9 +71,13 @@ void BrotRenderer::CalculateBrot()
 
 				NumIts++;
 			}
-			Render(x, NumIts);
-	}
 
+			int Brightness = (int)(Map(NumIts, 0, MaxIts, 0, 255));
+			if (NumIts == MaxIts || Brightness < 30)
+				Brightness = 0;
+
+			tempArray[x] = Brightness;
+	}
 }
 
 long double BrotRenderer::Map(long double Value, long double MinIn, long double MaxIn, long double MinOut, long double MaxOut)

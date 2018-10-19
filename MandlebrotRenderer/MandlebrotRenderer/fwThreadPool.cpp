@@ -62,7 +62,7 @@ void ThreadPool::Start()
 {
 	for (unsigned int i = 0; i < m_iNumberOfThreads; i++)
 	{
-		m_workerThreads.push_back(std::thread(&ThreadPool::DoWork, this));
+		m_workerThreads.push_back(std::thread(&ThreadPool::DoWork, this, i));
 	}
 }
 
@@ -77,7 +77,7 @@ void ThreadPool::Stop()
 }
 
 
-void ThreadPool::DoWork()
+void ThreadPool::DoWork(int threadnum)
 {
 	//Entry point of  a thread.
 	std::cout << std::endl << "Thread with id " << std::this_thread::get_id() << "starting........" << std::endl;

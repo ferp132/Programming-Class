@@ -21,7 +21,7 @@ public:
 
 	void Initialize();
 	void Submit(BrotRenderer _iworkItem);
-	void DoWork();
+	void DoWork(int i);
 	void Start();
 	void Stop();
 	std::atomic_int& getItemsProcessed();
