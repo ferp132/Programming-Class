@@ -196,10 +196,7 @@ void CServer::ProcessData(char* _pcDataReceived)
 		{
 			//Qs 3: To DO : Add the code to do a handshake here
 
-			std::string Welcome = "HandShake Success! /n  \n Welcome to The Server,";
-			Welcome.append(_packetRecvd.MessageContent);
-			_packetSent.Serialize(DATA, (char*)Welcome.c_str());
-			SendData(_packetSent.PacketData);
+
 
 			std::string Ploo = "Doobedoo";
 			_packetSent.Serialize(DATA, (char*)Ploo.c_str());
@@ -224,9 +221,9 @@ void CServer::ProcessData(char* _pcDataReceived)
 		//SendData(_packetSent.PacketData);
 		break;
 	}
-	case CLIENTREQ:
+	case BROADCAST:
 	{
-		std::cout << "Server received a request for client list from " << ntohs(m_ClientAddress.sin_port) << std::endl;
+		
 
 			std::string Welcome = "HandShake Success! Welcome to The Server,";
 			Welcome.append(_packetRecvd.MessageContent);
